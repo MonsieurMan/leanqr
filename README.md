@@ -1,4 +1,4 @@
-# node-qrcode
+# PENDING FORK OF: https://github.com/soldair/node-qrcode
 > QR code/2d barcode generator.
 
 [![Travis](https://img.shields.io/travis/soldair/node-qrcode.svg?style=flat-square)](http://travis-ci.org/soldair/node-qrcode)

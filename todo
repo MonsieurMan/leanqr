@@ -1,0 +1,12 @@
+- [ ] Convert to ESM
+- [ ] Convert function constructors to class.
+- [ ] Convert to typescript
+- [ ] Separate into multiple packages ?
+- [ ] Output
+    - ESM
+    - Bundled ?
+- [ ] Make renderers and everything appart from data -> model a plugin
+- [ ] Add benchmarks
+- [ ] Remove callbacks, promise only ?
+- [ ] Add the funky round svg renderer
+- [ ] Move tests where they belong
