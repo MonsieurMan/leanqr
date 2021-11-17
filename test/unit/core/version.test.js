@@ -1,12 +1,12 @@
-import tap from "tap";
-import * as Version from "../../../dist/esm/core/version.js";
-import * as VersionCheck from "../../../dist/esm/core/version-check.js";
-import * as ECLevel from "../../../dist/esm/core/error-correction-level.js";
-import * as Mode from "../../../dist/esm/core/mode.js";
-import * as NumericData from "../../../dist/esm/core/numeric-data.js";
-import * as AlphanumericData from "../../../dist/esm/core/alphanumeric-data.js";
-import * as KanjiData from "../../../dist/esm/core/kanji-data.js";
-import { ByteData } from "../../../dist/esm/core/byte-data.js";
+import tap from 'tap';
+import * as Version from '../../../dist/esm/core/version.js';
+import * as VersionCheck from '../../../dist/esm/core/version-check.js';
+import * as ECLevel from '../../../dist/esm/core/error-correction-level.js';
+import * as Mode from '../../../dist/esm/core/mode.js';
+import { NumericData } from '../../../dist/esm/core/numeric-data.js';
+import { AlphanumericData } from '../../../dist/esm/core/alphanumeric-data.js';
+import { KanjiData } from '../../../dist/esm/core/kanji-data.js';
+import { ByteData } from '../../../dist/esm/core/byte-data.js';
 const test = tap.test;
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 const EXPECTED_NUMERIC_CAPACITY = [
@@ -184,129 +184,129 @@ const EXPECTED_VERSION_BITS = [
 	0x1f250, 0x209d5, 0x216f0, 0x228ba, 0x2379f, 0x24b0b, 0x2542e, 0x26a64,
 	0x27541, 0x28c69,
 ];
-test("Version validity", function (t) {
-	t.notOk(VersionCheck.isValid(), "Should return false if no input");
+test('Version validity', function (t) {
+	t.notOk(VersionCheck.isValid(), 'Should return false if no input');
 	t.notOk(
-		VersionCheck.isValid(""),
-		"Should return false if version is not a number"
+		VersionCheck.isValid(''),
+		'Should return false if version is not a number'
 	);
 	t.notOk(
 		VersionCheck.isValid(0),
-		"Should return false if version is not in range"
+		'Should return false if version is not in range'
 	);
 	t.notOk(
 		VersionCheck.isValid(41),
-		"Should return false if version is not in range"
+		'Should return false if version is not in range'
 	);
 	t.end();
 });
-test("Version from value", function (t) {
-	t.equal(Version.from(5), 5, "Should return correct version from a number");
-	t.equal(Version.from("5"), 5, "Should return correct version from a string");
+test('Version from value', function (t) {
+	t.equal(Version.from(5), 5, 'Should return correct version from a number');
+	t.equal(Version.from('5'), 5, 'Should return correct version from a string');
 	t.equal(
 		Version.from(0, 1),
 		1,
-		"Should return default value if version is invalid"
+		'Should return default value if version is invalid'
 	);
 	t.equal(
 		Version.from(null, 1),
 		1,
-		"Should return default value if version is undefined"
+		'Should return default value if version is undefined'
 	);
 	t.end();
 });
-test("Version capacity", function (t) {
+test('Version capacity', function (t) {
 	t.throws(function () {
 		Version.getCapacity();
-	}, "Should throw if version is undefined");
+	}, 'Should throw if version is undefined');
 	t.throws(function () {
-		Version.getCapacity("");
-	}, "Should throw if version is not a number");
+		Version.getCapacity('');
+	}, 'Should throw if version is not a number');
 	t.throws(function () {
 		Version.getCapacity(0);
-	}, "Should throw if version is not in range");
+	}, 'Should throw if version is not in range');
 	t.throws(function () {
 		Version.getCapacity(41);
-	}, "Should throw if version is not in range");
+	}, 'Should throw if version is not in range');
 	for (let l = 0; l < EC_LEVELS.length; l++) {
 		for (let i = 1; i <= 40; i++) {
 			t.equal(
 				Version.getCapacity(i, EC_LEVELS[l], Mode.NUMERIC),
 				EXPECTED_NUMERIC_CAPACITY[i - 1][l],
-				"Should return correct numeric mode capacity"
+				'Should return correct numeric mode capacity'
 			);
 			t.equal(
 				Version.getCapacity(i, EC_LEVELS[l], Mode.ALPHANUMERIC),
 				EXPECTED_ALPHANUMERIC_CAPACITY[i - 1][l],
-				"Should return correct alphanumeric mode capacity"
+				'Should return correct alphanumeric mode capacity'
 			);
 			t.equal(
 				Version.getCapacity(i, EC_LEVELS[l], Mode.KANJI),
 				EXPECTED_KANJI_CAPACITY[i - 1][l],
-				"Should return correct kanji mode capacity"
+				'Should return correct kanji mode capacity'
 			);
 			t.equal(
 				Version.getCapacity(i, EC_LEVELS[l], Mode.BYTE),
 				EXPECTED_BYTE_CAPACITY[i - 1][l],
-				"Should return correct byte mode capacity"
+				'Should return correct byte mode capacity'
 			);
 			t.equal(
 				Version.getCapacity(i, EC_LEVELS[l]),
 				EXPECTED_BYTE_CAPACITY[i - 1][l],
-				"Should return correct byte mode capacity"
+				'Should return correct byte mode capacity'
 			);
 		}
 	}
 	t.end();
 });
-test("Version best match", function (t) {
+test('Version best match', function (t) {
 	function testBestVersionForCapacity(expectedCapacity, DataCtor) {
 		for (let v = 0; v < 40; v++) {
 			for (let l = 0; l < EC_LEVELS.length; l++) {
 				const capacity = expectedCapacity[v][l];
-				const data = new DataCtor(new Array(capacity + 1).join("-"));
+				const data = new DataCtor(new Array(capacity + 1).join('-'));
 				t.equal(
 					Version.getBestVersionForData(data, EC_LEVELS[l]),
 					v + 1,
-					"Should return best version"
+					'Should return best version'
 				);
 				t.equal(
 					Version.getBestVersionForData([data], EC_LEVELS[l]),
 					v + 1,
-					"Should return best version"
+					'Should return best version'
 				);
 				if (l === 1) {
 					t.equal(
 						Version.getBestVersionForData(data, null),
 						v + 1,
-						"Should return best version for ECLevel.M if error level is undefined"
+						'Should return best version for ECLevel.M if error level is undefined'
 					);
 					t.equal(
 						Version.getBestVersionForData([data], null),
 						v + 1,
-						"Should return best version for ECLevel.M if error level is undefined"
+						'Should return best version for ECLevel.M if error level is undefined'
 					);
 				}
 			}
 		}
 		for (let i = 0; i < EC_LEVELS.length; i++) {
 			const exceededCapacity = expectedCapacity[39][i] + 1;
-			const tooBigData = new DataCtor(new Array(exceededCapacity + 1).join("-"));
+			const tooBigData = new DataCtor(new Array(exceededCapacity + 1).join('-'));
 			const tooBigDataArray = [
-				new DataCtor(new Array(Math.floor(exceededCapacity / 2)).join("-")),
-				new DataCtor(new Array(Math.floor(exceededCapacity / 2) + 1).join("-")),
+				new DataCtor(new Array(Math.floor(exceededCapacity / 2)).join('-')),
+				new DataCtor(new Array(Math.floor(exceededCapacity / 2) + 1).join('-')),
 			];
 			t.notOk(
 				Version.getBestVersionForData(tooBigData, EC_LEVELS[i]),
-				"Should return undefined if data is too big"
+				'Should return undefined if data is too big'
 			);
 			t.notOk(
 				Version.getBestVersionForData([tooBigData], EC_LEVELS[i]),
-				"Should return undefined if data is too big"
+				'Should return undefined if data is too big'
 			);
 			t.notOk(
 				Version.getBestVersionForData(tooBigDataArray, EC_LEVELS[i]),
-				"Should return undefined if data is too big"
+				'Should return undefined if data is too big'
 			);
 		}
 	}
@@ -315,26 +315,26 @@ test("Version best match", function (t) {
 	testBestVersionForCapacity(EXPECTED_KANJI_CAPACITY, KanjiData);
 	testBestVersionForCapacity(EXPECTED_BYTE_CAPACITY, ByteData);
 	t.ok(
-		Version.getBestVersionForData([new ByteData("abc"), new NumericData("1234")]),
-		"Should return a version number if input array is valid"
+		Version.getBestVersionForData([new ByteData('abc'), new NumericData('1234')]),
+		'Should return a version number if input array is valid'
 	);
 	t.equal(
 		Version.getBestVersionForData([]),
 		1,
-		"Should return 1 if array is empty"
+		'Should return 1 if array is empty'
 	);
 	t.end();
 });
-test("Version encoded info", function (t) {
+test('Version encoded info', function (t) {
 	let v;
 	for (v = 0; v < 7; v++) {
 		t.throws(function () {
 			Version.getEncodedBits(v);
-		}, "Should throw if version is invalid or less than 7");
+		}, 'Should throw if version is invalid or less than 7');
 	}
 	for (v = 7; v <= 40; v++) {
 		const bch = Version.getEncodedBits(v);
-		t.equal(bch, EXPECTED_VERSION_BITS[v - 7], "Should return correct bits");
+		t.equal(bch, EXPECTED_VERSION_BITS[v - 7], 'Should return correct bits');
 	}
 	t.end();
 });

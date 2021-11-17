@@ -1,24 +1,24 @@
-import babel from "@rollup/plugin-babel";
-import { terser } from "rollup-plugin-terser";
+import babel from '@rollup/plugin-babel';
+import { terser } from 'rollup-plugin-terser';
 // import commonjs from "@rollup/plugin-commonjs";
-import resolve from "@rollup/plugin-node-resolve";
-import config from "./babel.config.json";
+import resolve from '@rollup/plugin-node-resolve';
+import config from './babel.config.json';
 import typescript from '@rollup/plugin-typescript';
 
-const extensions = [".js", ".ts"];
+const extensions = ['.js', '.ts'];
 
 export default [
 	{
-		input: "lib/browser.ts",
+		input: 'lib/browser.ts',
 		output: {
-			dir: "dist",
-			format: "esm",
+			dir: 'dist',
+			format: 'esm',
 			// name: "QRCode",
 			// exports: "named",
 		},
-    external: [/@babel\/runtime/],
+		external: [/@babel\/runtime/],
 		plugins: [
-      typescript()
+			typescript(),
 			// resolve({ extensions }),
 			// babel({
 			// 	...config,

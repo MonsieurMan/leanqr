@@ -1,25 +1,31 @@
-import canPromise from "./can-promise.js";
-import * as QRCode from "./core/qrcode.js";
-import * as CanvasRenderer from "./renderer/canvas.js";
-import * as SvgRenderer from "./renderer/svg-tag.js";
+import canPromise from './can-promise.js';
+import * as QRCode from './core/qrcode.js';
+import * as CanvasRenderer from './renderer/canvas.js';
+import * as SvgRenderer from './renderer/svg-tag.js';
 
-function renderCanvas(renderFunc: any, canvas: any, text: any, opts: any, cb: any) {
+function renderCanvas(
+	renderFunc: any,
+	canvas: any,
+	text: any,
+	opts: any,
+	cb: any
+) {
 	const args = [].slice.call(arguments, 1);
 	const argsNum = args.length;
-	const isLastArgCb = typeof args[argsNum - 1] === "function";
+	const isLastArgCb = typeof args[argsNum - 1] === 'function';
 	if (!isLastArgCb && !canPromise()) {
-		throw new Error("Callback required as last argument");
+		throw new Error('Callback required as last argument');
 	}
 	if (isLastArgCb) {
 		if (argsNum < 2) {
-			throw new Error("Too few arguments provided");
+			throw new Error('Too few arguments provided');
 		}
 		if (argsNum === 2) {
 			cb = text;
 			text = canvas;
 			canvas = opts = undefined;
 		} else if (argsNum === 3) {
-			if (canvas.getContext && typeof cb === "undefined") {
+			if (canvas.getContext && typeof cb === 'undefined') {
 				cb = opts;
 				opts = undefined;
 			} else {
@@ -31,7 +37,7 @@ function renderCanvas(renderFunc: any, canvas: any, text: any, opts: any, cb: an
 		}
 	} else {
 		if (argsNum < 1) {
-			throw new Error("Too few arguments provided");
+			throw new Error('Too few arguments provided');
 		}
 		if (argsNum === 1) {
 			text = canvas;
@@ -63,6 +69,9 @@ export const toDataURL = renderCanvas.bind(
 	null,
 	CanvasRenderer.renderToDataURL
 );
-export const toString = renderCanvas.bind(null, function (data: any, _: any, opts: any) {
-	return SvgRenderer.render(data, opts);
-});
+export const toString = renderCanvas.bind(
+	null,
+	function (data: any, _: any, opts: any) {
+		return SvgRenderer.render(data, opts);
+	}
+);

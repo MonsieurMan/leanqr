@@ -1,5 +1,5 @@
 module.exports = {
-	extends: "eslint:recommended",
+	extends: ["eslint:recommended", "prettier"],
 	parser: "@babel/eslint-parser",
 	parserOptions: {
 		sourceType: "module",
@@ -7,13 +7,10 @@ module.exports = {
 		ecmaFeatures: {
 			globalReturn: false,
 		},
-		// babelOptions: {
-		// 	configFile: "path/to/config.js",
-		// },
 	},
 	env: {
 		es6: true,
 		node: true,
-		browser: true
-	}
+		browser: true,
+	},
 };

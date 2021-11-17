@@ -1,5 +1,5 @@
-import tap from "tap";
-import * as Utils from "../../../dist/esm/core/utils.js";
+import tap from 'tap';
+import * as Utils from '../../../dist/esm/core/utils.js';
 const test = tap.test;
 /**
  * QR Code sizes. Each element refers to a version
@@ -10,32 +10,32 @@ const EXPECTED_SYMBOL_SIZES = [
 	101, 105, 109, 113, 117, 121, 125, 129, 133, 137, 141, 145, 149, 153, 157, 161,
 	165, 169, 173, 177,
 ];
-test("Symbol size", function (t) {
+test('Symbol size', function (t) {
 	t.throws(function () {
 		Utils.getSymbolSize();
-	}, "Should throw if version is undefined");
+	}, 'Should throw if version is undefined');
 	t.throws(function () {
 		Utils.getSymbolSize(0);
-	}, "Should throw if version is not in range");
+	}, 'Should throw if version is not in range');
 	t.throws(function () {
 		Utils.getSymbolSize(41);
-	}, "Should throw if version is not in range");
+	}, 'Should throw if version is not in range');
 	for (let i = 1; i <= 40; i++) {
 		t.equal(
 			Utils.getSymbolSize(i),
 			EXPECTED_SYMBOL_SIZES[i - 1],
-			"Should return correct symbol size"
+			'Should return correct symbol size'
 		);
 	}
 	t.end();
 });
-test("Symbol codewords", function (t) {
+test('Symbol codewords', function (t) {
 	for (let i = 1; i <= 40; i++) {
-		t.ok(Utils.getSymbolTotalCodewords(i), "Should return positive number");
+		t.ok(Utils.getSymbolTotalCodewords(i), 'Should return positive number');
 	}
 	t.end();
 });
-test("BCH Digit", function (t) {
+test('BCH Digit', function (t) {
 	const testData = [
 		{ data: 0, bch: 0 },
 		{ data: 1, bch: 1 },
@@ -47,21 +47,21 @@ test("BCH Digit", function (t) {
 		t.equal(
 			Utils.getBCHDigit(d.data),
 			d.bch,
-			"Should return correct BCH for value: " + d.data
+			'Should return correct BCH for value: ' + d.data
 		);
 	});
 	t.end();
 });
-test("Set/Get SJIS function", function (t) {
-	t.throw(function () {
+test('Set/Get SJIS function', function (t) {
+	t.throws(function () {
 		Utils.setToSJISFunction();
-	}, "Should throw if param is not a function");
+	}, 'Should throw if param is not a function');
 	t.notOk(
 		Utils.isKanjiModeEnabled(),
 		'Kanji mode should be disabled if "toSJIS" function is not set'
 	);
 	const testFunc = function testFunc(c) {
-		return "test_" + c;
+		return 'test_' + c;
 	};
 	Utils.setToSJISFunction(testFunc);
 	t.ok(
@@ -69,8 +69,8 @@ test("Set/Get SJIS function", function (t) {
 		'Kanji mode should be enabled if "toSJIS" function is set'
 	);
 	t.equal(
-		Utils.toSJIS("a"),
-		"test_a",
+		Utils.toSJIS('a'),
+		'test_a',
 		'Should correctly call "toSJIS" function'
 	);
 	t.end();

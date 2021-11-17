@@ -1,22 +1,22 @@
 #!/usr/bin/env node
-import yargs from "yargs";
-import * as qr from "../lib/index.js";
+import yargs from 'yargs';
+import * as qr from '../lib/index.js';
 
 function save(file, text, options) {
 	qr.toFile(file, text, options, function (err) {
 		if (err) {
-			console.error("Error:", err.message);
+			console.error('Error:', err.message);
 			process.exit(1);
 		}
-		console.log("saved qrcode to: " + file + "\n");
+		console.log('saved qrcode to: ' + file + '\n');
 	});
 }
 
 function print(text, options) {
-	options.type = "terminal";
+	options.type = 'terminal';
 	qr.toString(text, options, function (err, text) {
 		if (err) {
-			console.error("Error:", err.message);
+			console.error('Error:', err.message);
 			process.exit(1);
 		}
 		console.log(text);
@@ -54,99 +54,99 @@ function processInputs(text, opts) {
 }
 let argv = yargs
 	.detectLocale(false)
-	.usage("Usage: $0 [options] <input string>")
-	.option("v", {
-		alias: "qversion",
-		description: "QR Code symbol version (1 - 40)",
-		group: "QR Code options:",
-		type: "number",
+	.usage('Usage: $0 [options] <input string>')
+	.option('v', {
+		alias: 'qversion',
+		description: 'QR Code symbol version (1 - 40)',
+		group: 'QR Code options:',
+		type: 'number',
 	})
-	.option("e", {
-		alias: "error",
-		description: "Error correction level",
-		choices: ["L", "M", "Q", "H"],
-		group: "QR Code options:",
+	.option('e', {
+		alias: 'error',
+		description: 'Error correction level',
+		choices: ['L', 'M', 'Q', 'H'],
+		group: 'QR Code options:',
 	})
-	.option("m", {
-		alias: "mask",
-		description: "Mask pattern (0 - 7)",
-		group: "QR Code options:",
-		type: "number",
+	.option('m', {
+		alias: 'mask',
+		description: 'Mask pattern (0 - 7)',
+		group: 'QR Code options:',
+		type: 'number',
 	})
-	.option("t", {
-		alias: "type",
-		description: "Output type",
-		choices: ["png", "svg", "utf8"],
-		implies: "output",
-		group: "Renderer options:",
+	.option('t', {
+		alias: 'type',
+		description: 'Output type',
+		choices: ['png', 'svg', 'utf8'],
+		implies: 'output',
+		group: 'Renderer options:',
 	})
-	.option("i", {
-		alias: "inverse",
-		type: "boolean",
-		description: "Invert colors",
-		group: "Renderer options:",
+	.option('i', {
+		alias: 'inverse',
+		type: 'boolean',
+		description: 'Invert colors',
+		group: 'Renderer options:',
 	})
-	.option("w", {
-		alias: "width",
-		description: "Image width (px)",
-		conflicts: "scale",
-		group: "Renderer options:",
-		type: "number",
+	.option('w', {
+		alias: 'width',
+		description: 'Image width (px)',
+		conflicts: 'scale',
+		group: 'Renderer options:',
+		type: 'number',
 	})
-	.option("s", {
-		alias: "scale",
-		description: "Scale factor",
-		conflicts: "width",
-		group: "Renderer options:",
-		type: "number",
+	.option('s', {
+		alias: 'scale',
+		description: 'Scale factor',
+		conflicts: 'width',
+		group: 'Renderer options:',
+		type: 'number',
 	})
-	.option("q", {
-		alias: "qzone",
-		description: "Quiet zone size",
-		group: "Renderer options:",
-		type: "number",
+	.option('q', {
+		alias: 'qzone',
+		description: 'Quiet zone size',
+		group: 'Renderer options:',
+		type: 'number',
 	})
-	.option("l", {
-		alias: "lightcolor",
-		description: "Light RGBA hex color",
-		group: "Renderer options:",
+	.option('l', {
+		alias: 'lightcolor',
+		description: 'Light RGBA hex color',
+		group: 'Renderer options:',
 	})
-	.option("d", {
-		alias: "darkcolor",
-		description: "Dark RGBA hex color",
-		group: "Renderer options:",
+	.option('d', {
+		alias: 'darkcolor',
+		description: 'Dark RGBA hex color',
+		group: 'Renderer options:',
 	})
-	.option("small", {
-		type: "boolean",
-		description: "Output smaller QR code to terminal",
-		conflicts: "type",
-		group: "Renderer options:",
+	.option('small', {
+		type: 'boolean',
+		description: 'Output smaller QR code to terminal',
+		conflicts: 'type',
+		group: 'Renderer options:',
 	})
-	.option("o", {
-		alias: "output",
-		description: "Output file",
+	.option('o', {
+		alias: 'output',
+		description: 'Output file',
 	})
-	.help("h")
-	.alias("h", "help")
+	.help('h')
+	.alias('h', 'help')
 	.version()
-	.example('$0 "some text"', "Draw in terminal window")
-	.example('$0 -o out.png "some text"', "Save as png image")
-	.example('$0 -d F00 -o out.png "some text"', "Use red as foreground color")
-	.parserConfiguration({ "parse-numbers": false }).argv;
+	.example('$0 "some text"', 'Draw in terminal window')
+	.example('$0 -o out.png "some text"', 'Save as png image')
+	.example('$0 -d F00 -o out.png "some text"', 'Use red as foreground color')
+	.parserConfiguration({ 'parse-numbers': false }).argv;
 if (process.stdin.isTTY) {
-	processInputs(argv._.join(" "), argv);
+	processInputs(argv._.join(' '), argv);
 } else {
-	let text = "";
-	process.stdin.setEncoding("utf8");
-	process.stdin.on("readable", function () {
+	let text = '';
+	process.stdin.setEncoding('utf8');
+	process.stdin.on('readable', function () {
 		let chunk = process.stdin.read();
 		if (chunk !== null) {
 			text += chunk;
 		}
 	});
-	process.stdin.on("end", function () {
+	process.stdin.on('end', function () {
 		// this process can be run as a command outside of a tty so if there was no
 		// data on stdin read from argv
-		processInputs(text.length ? text : argv._.join(" "), argv);
+		processInputs(text.length ? text : argv._.join(' '), argv);
 	});
 }
