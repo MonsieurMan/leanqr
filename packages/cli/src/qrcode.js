@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
-import * as qr from '../lib/index.js';
+import * as qr from '../../lib/index.js';
 
 function save(file, text, options) {
 	qr.toFile(file, text, options, function (err) {

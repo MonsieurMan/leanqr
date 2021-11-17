@@ -1,10 +1,10 @@
-- [x] Convert to ESM
-- [x] Convert function constructors to class.
-- [ ] Convert to typescript
 - [ ] Separate into multiple packages ?
   - @qrcode/core -> Map data to QRCode data model
   - @qrcode/cli
   - @qrcode/renderer/[svg|png|bmp|string]
+- [x] Convert to ESM
+- [x] Convert function constructors to class.
+- [ ] Convert to typescript
 - [ ] Output
   - [x] ESM
   - Bundled ?

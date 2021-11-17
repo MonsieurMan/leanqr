@@ -1,9 +1,9 @@
 import canPromise from './can-promise.js';
-import * as QRCode from './core/qrcode.js';
-import * as PngRenderer from './renderer/png.js';
-import * as Utf8Renderer from './renderer/utf8.js';
-import * as TerminalRenderer from './renderer/terminal.js';
-import * as SvgRenderer from './renderer/svg.js';
+import * as QRCode from '../packages/core/qrcode.js.js';
+import * as PngRenderer from '../packages/renderer/png.js.js';
+import * as Utf8Renderer from '../packages/renderer/utf8.js.js';
+import * as TerminalRenderer from '../packages/renderer/terminal.js.js';
+import * as SvgRenderer from '../packages/renderer/svg.js.js';
 export { toCanvas } from './browser.js';
 
 function checkParams(text, opts, cb) {

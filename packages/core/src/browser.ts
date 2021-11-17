@@ -1,7 +1,7 @@
 import canPromise from './can-promise.js';
-import * as QRCode from './core/qrcode.js';
-import * as CanvasRenderer from './renderer/canvas.js';
-import * as SvgRenderer from './renderer/svg-tag.js';
+import * as QRCode from '../packages/core/qrcode.js.js';
+import * as CanvasRenderer from '../packages/renderer/canvas.js.js';
+import * as SvgRenderer from '../packages/renderer/svg-tag.js.js';
 
 function renderCanvas(
 	renderFunc: any,

@@ -1,4 +1,4 @@
-import * as QRCode from '../lib/index.js';
+import * as QRCode from '../../lib/index.js';
 
 QRCode.toString('yo yo yo', function (error, data) {
 	if (error) {
