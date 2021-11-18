@@ -1,5 +1,30 @@
 # PENDING FORK OF: https://github.com/soldair/node-qrcode
 
+## TODO
+
+- [/] Separate into multiple packages ?
+  - [/] @qrcode/core -> Map data to QRCode data model
+    - [ ] Convert to typescript
+    - [ ] Fix tests
+  - [/] @qrcode/render-svg
+    - [ ] Fix tests
+  - @qrcode/render-canvas
+  - @qrcode/render-utf8
+  - @qrcode/render-png
+  - @qrcode/render-bmp
+  - @qrcode/cli
+- [x] Convert to ESM
+- [x] Convert function constructors to class.
+- [ ] Convert to typescript
+- [ ] Output
+  - [ ] ESM
+  - Bundled ?
+- [ ] Add CI back
+- [ ] Add benchmarks
+- [ ] Remove callbacks, promise only ?
+- [ ] Add the funky round svg renderer
+- [ ] Move tests where they belong
+
 > QR code/2d barcode generator.
 
 [![Travis](https://img.shields.io/travis/soldair/node-qrcode.svg?style=flat-square)](http://travis-ci.org/soldair/node-qrcode)

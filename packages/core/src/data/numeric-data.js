@@ -1,4 +1,4 @@
-import * as Mode from './mode.js';
+import * as Mode from '../encoder/mode.js';
 
 export class NumericData {
 	constructor(data) {

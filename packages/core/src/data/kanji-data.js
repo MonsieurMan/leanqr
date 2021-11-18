@@ -1,5 +1,7 @@
-import * as Mode from './mode.js';
-import * as Utils from './utils.js';
+import * as Mode from '../encoder/mode.js';
+import * as Utils from '../encoder/utils.js';
+
+// TODO: Should move from core.
 export class KanjiData {
 	constructor(data) {
 		this.mode = Mode.KANJI;

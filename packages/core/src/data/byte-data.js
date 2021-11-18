@@ -1,5 +1,5 @@
 import encodeUtf8 from 'encode-utf8';
-import * as Mode from './mode.js';
+import * as Mode from '../encoder/mode.js';
 
 export class ByteData {
 	constructor(data) {

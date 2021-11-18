@@ -1,0 +1,24 @@
+{
+  "name": "@leanqr/cli",
+  "version": "0.0.0",
+  "description": "Qrcode cli.",
+  "main": "dist/index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MonsieurMan/leanqr.git"
+  },
+  "keywords": [
+    "cli",
+    "qrcode",
+    "esm",
+    "typescript"
+  ],
+  "author": "soldair monsieurman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MonsieurMan/leanqr/issues"
+  },
+  "homepage": "https://github.com/MonsieurMan/leanqr/packages/cli#readme"
+}

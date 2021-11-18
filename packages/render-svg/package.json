@@ -1,0 +1,33 @@
+{
+  "name": "@leanqr/render-svg",
+  "version": "0.0.0",
+  "description": "QRCode SVG renderer.",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "pnpm build && node ./test.js",
+		"build": "pnpm build:clean && pnpm build:tsc",
+		"build:clean": "rm -rf dist/",
+		"build:tsc": "tsc"
+  },
+  "devDependencies": {
+    "@leanqr/core": "workspace:0.0.1"
+  },
+  "peerDependencies": {
+    "@leanqr/core": "workspace:0.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MonsieurMan/leanqr.git"
+  },
+  "keywords": [
+    "svg",
+    "qrcode"
+  ],
+  "author": "soldair monsieurman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MonsieurMan/leanqr/issues"
+  },
+  "homepage": "https://github.com/MonsieurMan/leanqr#readme"
+}

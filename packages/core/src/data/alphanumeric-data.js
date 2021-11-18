@@ -1,4 +1,5 @@
-import * as Mode from './mode.js';
+import * as Mode from '../encoder/mode.js';
+
 /**
  * Array of characters available in alphanumeric mode
  *
@@ -55,17 +56,21 @@ const ALPHA_NUM_CHARS = [
 	'/',
 	':',
 ];
+
 export class AlphanumericData {
 	constructor(data) {
 		this.mode = Mode.ALPHANUMERIC;
 		this.data = data;
 	}
+
 	getLength() {
 		return this.data.length;
 	}
+
 	getBitsLength() {
 		return AlphanumericData.getBitsLength(this.data.length);
 	}
+
 	write(bitBuffer) {
 		let i;
 		// Input data characters are divided into groups of two characters
@@ -84,8 +89,10 @@ export class AlphanumericData {
 			bitBuffer.put(ALPHA_NUM_CHARS.indexOf(this.data[i]), 6);
 		}
 	}
+
 	static getBitsLength(length) {
 		return 11 * Math.floor(length / 2) + 6 * (length % 2);
 	}
 }
+
 export default AlphanumericData;

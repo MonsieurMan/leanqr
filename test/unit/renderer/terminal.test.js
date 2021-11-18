@@ -2,10 +2,12 @@ import tap from 'tap';
 import * as QRCode from '../../../dist/esm/index.js';
 import * as TerminalRenderer from '../../../dist/esm/renderer/terminal.js';
 const test = tap.test;
+
 test('TerminalRenderer interface', function (t) {
 	t.type(TerminalRenderer.render, 'function', 'Should have render function');
 	t.end();
 });
+
 test('TerminalRenderer render big', function (t) {
 	const sampleQrData = QRCode.create('sample text', { version: 2 });
 	let str;
@@ -25,6 +27,7 @@ test('TerminalRenderer render big', function (t) {
 	t.type(str, 'string', 'Should return a string if inverse option is set');
 	t.end();
 });
+
 test('TerminalRenderer render small', function (t) {
 	const sampleQrData = QRCode.create('sample text', { version: 2 });
 	let str;

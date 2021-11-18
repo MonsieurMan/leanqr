@@ -1,8 +1,10 @@
 import tap from 'tap';
 import canvas from 'canvas';
 const { Canvas, createCanvas } = canvas;
+
 import * as QRCode from '../../../dist/esm/index.js';
 import * as CanvasRenderer from '../../../dist/esm/renderer/canvas.js';
+
 const test = tap.test;
 
 test('CanvasRenderer interface', function (t) {
@@ -14,6 +16,7 @@ test('CanvasRenderer interface', function (t) {
 	);
 	t.end();
 });
+
 test('CanvasRenderer render', function (t) {
 	// Mock document object
 	global.document = {
@@ -44,6 +47,7 @@ test('CanvasRenderer render', function (t) {
 	}, 'Should throw if canvas cannot be created');
 	t.end();
 });
+
 test('CanvasRenderer render to provided canvas', function (t) {
 	const sampleQrData = QRCode.create('sample text', { version: 2 });
 	const canvasEl = createCanvas(200, 200);
@@ -61,6 +65,7 @@ test('CanvasRenderer render to provided canvas', function (t) {
 	t.equal(canvasEl.width, canvasEl.height, 'Should be a square image');
 	t.end();
 });
+
 test('CanvasRenderer renderToDataURL', function (t) {
 	// Mock document object
 	global.document = {
@@ -93,6 +98,7 @@ test('CanvasRenderer renderToDataURL', function (t) {
 	global.document = undefined;
 	t.end();
 });
+
 test('CanvasRenderer renderToDataURL to provided canvas', function (t) {
 	const sampleQrData = QRCode.create('sample text', { version: 2 });
 	const canvasEl = createCanvas(200, 200);

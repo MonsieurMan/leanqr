@@ -32,7 +32,7 @@
 		"lint": "pnpm lint:format && pnpm lint:eslint",
 		"lint:eslint": "eslint bin/ examples/  lib/ test/",
 		"lint:format": "prettier --check .",
-		"test": "pnpm build && node ./test.js",
+		"teste": "pnpm build && node ./test.js",
 		"build": "pnpm build:clean && pnpm build:tsc",
 		"build:clean": "rm -rf dist/",
 		"build:tsc": "tsc",
@@ -48,10 +48,9 @@
 		"@babel/runtime": "^7.16.3",
 		"@rollup/plugin-babel": "^5.3.0",
 		"@rollup/plugin-typescript": "^8.3.0",
-		"dijkstrajs": "^1.0.1",
 		"encode-utf8": "^2.0.0",
 		"pngjs": "^5.0.0",
-		"typescript": "^4.4.4",
+		"typescript": "^4.5.2",
 		"yargs": "^15.3.1"
 	},
 	"devDependencies": {
@@ -71,7 +70,7 @@
 		"rollup": "^2.6.1",
 		"rollup-plugin-terser": "^5.3.0",
 		"sinon": "^9.0.2",
-		"tap": "^15.0.10",
+		"tap": "^15.1.1",
 		"ts-node": "^10.4.0"
 	},
 	"repository": {

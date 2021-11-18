@@ -1,3 +1,7 @@
+/**
+ * Regexs used to determine datatype.
+ */
+
 const numeric = '[0-9]+';
 const alphanumeric = '[A-Z $%*+\\-./:]+';
 let kanji =
@@ -6,21 +10,26 @@ let kanji =
 	'[u2010u2015u2018u2019u2025u2026u201Cu201Du2225u2260]|' +
 	'[u0391-u0451]|[u00A7u00A8u00B1u00B4u00D7u00F7])+';
 kanji = kanji.replace(/u/g, '\\u');
+
 const byte = '(?:(?![A-Z0-9 $%*+\\-./:]|' + kanji + ')(?:.|[\r\n]))+';
 const TEST_KANJI = new RegExp('^' + kanji + '$');
 const TEST_NUMERIC = new RegExp('^' + numeric + '$');
 const TEST_ALPHANUMERIC = new RegExp('^[A-Z0-9 $%*+\\-./:]+$');
+
 export const KANJI = new RegExp(kanji, 'g');
 export const BYTE_KANJI = new RegExp('[^A-Z0-9 $%*+\\-./:]+', 'g');
 export const BYTE = new RegExp(byte, 'g');
 export const NUMERIC = new RegExp(numeric, 'g');
 export const ALPHANUMERIC = new RegExp(alphanumeric, 'g');
+
 export function testKanji(str) {
 	return TEST_KANJI.test(str);
 }
+
 export function testNumeric(str) {
 	return TEST_NUMERIC.test(str);
 }
+
 export function testAlphanumeric(str) {
 	return TEST_ALPHANUMERIC.test(str);
 }

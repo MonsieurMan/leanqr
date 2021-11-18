@@ -11,6 +11,7 @@ function getExpectedViewbox(size, margin) {
 	const expectedQrCodeSize = size + margin * 2;
 	return '0 0 ' + expectedQrCodeSize + ' ' + expectedQrCodeSize;
 }
+
 function testSvgFragment(t, svgFragment, expectedTags) {
 	return new Promise(function (resolve, reject) {
 		const parser = new htmlparser.Parser(
@@ -39,19 +40,12 @@ function testSvgFragment(t, svgFragment, expectedTags) {
 		parser.end();
 	});
 }
+
 function buildTest(t, data, opts, expectedTags) {
 	const svg = SvgRenderer.render(data, opts);
 	return testSvgFragment(t, svg, expectedTags.slice());
 }
-test('svgrender interface', function (t) {
-	t.type(SvgRenderer.render, 'function', 'Should have render function');
-	t.type(
-		SvgRenderer.renderToFile,
-		'function',
-		'Should have renderToFile function'
-	);
-	t.end();
-});
+
 test('Svg render', function (t) {
 	const tests = [];
 	const data = QRCode.create('sample text', { version: 2 });
