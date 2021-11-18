@@ -2,7 +2,7 @@ import tap from 'tap';
 import canvas from 'canvas';
 import * as QRCode from '../../dist/esm/index.js';
 import * as QRCodeBrowser from '../../dist/esm/browser.js';
-import * as Helpers from '../helpers.js';
+import * as Helpers from './test/helpers.js';
 const test = tap.test;
 const { createCanvas } = canvas;
 test('toDataURL - no promise available', function (t) {

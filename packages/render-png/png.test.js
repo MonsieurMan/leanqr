@@ -2,7 +2,7 @@ import tap from 'tap';
 import * as QRCode from '../../../dist/esm/index.js';
 import * as PngRenderer from '../../../dist/esm/renderer/png.js';
 import { PNG } from 'pngjs';
-import StreamMock from '../../mocks/writable-stream.js';
+import StreamMock from '../../writable-stream.js/index.js';
 const test = tap.test;
 
 test('PNG render', function (t) {

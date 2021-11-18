@@ -1,10 +1,10 @@
-import encodeUtf8 from 'encode-utf8';
 import * as Mode from '../encoder/mode.js';
 
 export class ByteData {
 	constructor(data) {
 		this.mode = Mode.BYTE;
-		this.data = new Uint8Array(encodeUtf8(data));
+		const textEncoder = new TextEncoder();
+		this.data = textEncoder.encode(data);
 	}
 	getLength() {
 		return this.data.length;

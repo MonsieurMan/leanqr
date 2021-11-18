@@ -1,10 +1,5 @@
 import tap from 'tap';
-import {
-	getOptions,
-	getImageWidth,
-	getScale,
-	qrToImageData,
-} from '../../../dist/esm/renderer/utils.js';
+import { getOptions, getImageWidth, getScale, qrToImageData } from './utils.js';
 const test = tap.test;
 test('Utils getOptions', function (t) {
 	const defaultOptions = {

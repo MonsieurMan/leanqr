@@ -6,6 +6,7 @@
   - [/] @qrcode/core -> Map data to QRCode data model
     - [ ] Convert to typescript
     - [ ] Fix tests
+    - [ ] Redefine a clear API
   - [/] @qrcode/render-svg
     - [ ] Fix tests
   - @qrcode/render-canvas
@@ -20,6 +21,7 @@
   - [ ] ESM
   - Bundled ?
 - [ ] Add CI back
+- [ ] Documentation site
 - [ ] Add benchmarks
 - [ ] Remove callbacks, promise only ?
 - [ ] Add the funky round svg renderer
