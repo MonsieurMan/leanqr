@@ -1,10 +1,15 @@
 import * as Polynomial from './polynomial.js';
 
 export class ReedSolomonEncoder {
-	constructor(degree) {
+	private genPoly?: Uint8Array;
+	constructor(private degree: number) {
 		this.genPoly = undefined;
 		this.degree = degree;
-		if (this.degree) this.initialize(this.degree);
+
+		// Meaning different than 0 _-_
+		if (this.degree) {
+			this.initialize(this.degree);
+		}
 	}
 
 	/**
@@ -13,7 +18,7 @@ export class ReedSolomonEncoder {
 	 *
 	 * @param  {Number} degree
 	 */
-	initialize(degree) {
+	initialize(degree: number) {
 		// create an irreducible generator polynomial
 		this.degree = degree;
 		this.genPoly = Polynomial.generateECPolynomial(this.degree);
@@ -25,7 +30,7 @@ export class ReedSolomonEncoder {
 	 * @param  {Uint8Array} data Buffer containing input data
 	 * @return {Uint8Array}      Buffer containing encoded data
 	 */
-	encode(data) {
+	encode(data: Uint8Array): Uint8Array {
 		if (!this.genPoly) {
 			throw new Error('Encoder not initialized');
 		}

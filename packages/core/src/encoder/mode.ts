@@ -1,5 +1,5 @@
-import * as VersionCheck from './version-check.js';
 import * as Regex from '../data/regex.js';
+import { isValid as isValidVersion } from './version.js';
 
 /**
  * Get mode object from its name
@@ -7,7 +7,7 @@ import * as Regex from '../data/regex.js';
  * @param   {String} string Mode name
  * @returns {Mode}          Mode object
  */
-function fromString(string) {
+function fromString(string: string): Mode {
 	if (typeof string !== 'string') {
 		throw new Error('Param is not a string');
 	}
@@ -26,37 +26,46 @@ function fromString(string) {
 	}
 }
 
-export const NUMERIC = {
+// TODO: Change Mode to InputType
+export const NUMERIC: Mode = {
 	id: 'Numeric',
 	bit: 1 << 0,
 	ccBits: [10, 12, 14],
 };
 
-export const ALPHANUMERIC = {
+export const ALPHANUMERIC: Mode = {
 	id: 'Alphanumeric',
 	bit: 1 << 1,
 	ccBits: [9, 11, 13],
 };
 
-export const BYTE = {
+export const BYTE: Mode = {
 	id: 'Byte',
 	bit: 1 << 2,
 	ccBits: [8, 16, 16],
 };
 
-export const KANJI = {
+export const KANJI: Mode = {
 	id: 'Kanji',
 	bit: 1 << 3,
 	ccBits: [8, 10, 12],
 };
 
-export const MIXED = {
+export const MIXED: Mode = {
+	id: 'mixed',
 	bit: -1,
+	ccBits: [],
 };
 
-export function getCharCountIndicator(mode, version) {
+export interface Mode {
+	id: string;
+	bit: number;
+	ccBits: Array<number>;
+}
+
+export function getCharCountIndicator(mode: Mode, version: number): number {
 	if (!mode.ccBits) throw new Error('Invalid mode: ' + mode);
-	if (!VersionCheck.isValid(version)) {
+	if (!isValidVersion(version)) {
 		throw new Error('Invalid version: ' + version);
 	}
 	if (version >= 1 && version < 10) return mode.ccBits[0];
@@ -64,23 +73,23 @@ export function getCharCountIndicator(mode, version) {
 	return mode.ccBits[2];
 }
 
-export function getBestModeForData(dataStr) {
+export function getBestModeForData(dataStr: string): Mode {
 	if (Regex.testNumeric(dataStr)) return NUMERIC;
 	else if (Regex.testAlphanumeric(dataStr)) return ALPHANUMERIC;
 	else if (Regex.testKanji(dataStr)) return KANJI;
 	else return BYTE;
 }
 
-export function toString(mode) {
+export function toString(mode: Mode): string {
 	if (mode && mode.id) return mode.id;
 	throw new Error('Invalid mode');
 }
 
-export function isValid(mode) {
+export function isValid(mode?: any): mode is Mode {
 	return mode && mode.bit && mode.ccBits;
 }
 
-export function from(value, defaultValue) {
+export function from(value: Mode | string, defaultValue: Mode): Mode {
 	if (isValid(value)) {
 		return value;
 	}

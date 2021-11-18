@@ -2,7 +2,7 @@ import { getSymbolSize } from './utils.js';
 
 const FINDER_PATTERN_SIZE = 7;
 
-export function getPositions(version) {
+export function getPositions(version: number): number[][] {
 	const size = getSymbolSize(version);
 	return [
 		// top-left

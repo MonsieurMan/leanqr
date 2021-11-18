@@ -1,3 +1,4 @@
+import { ErrorCorrectionLevelBits } from './error-correction-level.js';
 import * as Utils from './utils.js';
 
 const G15 =
@@ -5,7 +6,10 @@ const G15 =
 const G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
 const G15_BCH = Utils.getBCHDigit(G15);
 
-export function getEncodedBits(errorCorrectionLevel, mask) {
+export function getEncodedBits(
+	errorCorrectionLevel: ErrorCorrectionLevelBits,
+	mask: number
+): number {
 	const data = (errorCorrectionLevel.bit << 3) | mask;
 	let d = data << 10;
 	while (Utils.getBCHDigit(d) - G15_BCH >= 0) {

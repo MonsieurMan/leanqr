@@ -1,6 +1,6 @@
 import * as GF from './galois-field.js';
 
-export function mul(p1, p2) {
+export function mul(p1: Uint8Array, p2: Uint8Array) {
 	const coeff = new Uint8Array(p1.length + p2.length - 1);
 	for (let i = 0; i < p1.length; i++) {
 		for (let j = 0; j < p2.length; j++) {
@@ -10,7 +10,7 @@ export function mul(p1, p2) {
 	return coeff;
 }
 
-export function mod(divident, divisor) {
+export function mod(divident: Uint8Array, divisor: Uint8Array) {
 	let result = new Uint8Array(divident);
 	while (result.length - divisor.length >= 0) {
 		const coeff = result[0];
@@ -25,7 +25,7 @@ export function mod(divident, divisor) {
 	return result;
 }
 
-export function generateECPolynomial(degree) {
+export function generateECPolynomial(degree: number) {
 	let poly = new Uint8Array([1]);
 	for (let i = 0; i < degree; i++) {
 		poly = mul(poly, new Uint8Array([1, GF.exp(i)]));

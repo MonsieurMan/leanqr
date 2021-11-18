@@ -1,6 +1,5 @@
 import * as Utils from './utils.js';
 import * as ECLevel from './error-correction-level.js';
-import { BitBuffer } from '../data/bit-buffer.js';
 import { BitMatrix } from '../data/bit-matrix.js';
 import * as AlignmentPattern from './alignment-pattern.js';
 import * as FinderPattern from './finder-pattern.js';
@@ -11,6 +10,7 @@ import * as Version from './version.js';
 import * as FormatInfo from './format-info.js';
 import * as Mode from './mode.js';
 import * as Segments from './segments.js';
+import { BitBuffer } from '../data/bit-buffer.js';
 
 /**
  * QRCode for JavaScript
@@ -58,9 +58,9 @@ function setupFinderPattern(matrix: BitMatrix, version: number) {
 					(c >= 0 && c <= 6 && (r === 0 || r === 6)) ||
 					(r >= 2 && r <= 4 && c >= 2 && c <= 4)
 				) {
-					matrix.set(row + r, col + c, true, true);
+					matrix.set(row + r, col + c, 1, true);
 				} else {
-					matrix.set(row + r, col + c, false, true);
+					matrix.set(row + r, col + c, 0, true);
 				}
 			}
 		}
@@ -78,8 +78,8 @@ function setupTimingPattern(matrix: BitMatrix) {
 	const size = matrix.size;
 	for (let r = 8; r < size - 8; r++) {
 		const value = r % 2 === 0;
-		matrix.set(r, 6, value, true);
-		matrix.set(6, r, value, true);
+		matrix.set(r, 6, value ? 1 : 0, true);
+		matrix.set(6, r, value ? 1 : 0, true);
 	}
 }
 
@@ -99,9 +99,9 @@ function setupAlignmentPattern(matrix: BitMatrix, version: number) {
 		for (let r = -2; r <= 2; r++) {
 			for (let c = -2; c <= 2; c++) {
 				if (r === -2 || r === 2 || c === -2 || c === 2 || (r === 0 && c === 0)) {
-					matrix.set(row + r, col + c, true, true);
+					matrix.set(row + r, col + c, 1, true);
 				} else {
-					matrix.set(row + r, col + c, false, true);
+					matrix.set(row + r, col + c, 0, true);
 				}
 			}
 		}
@@ -122,8 +122,8 @@ function setupVersionInfo(matrix: BitMatrix, version: number) {
 		row = Math.floor(i / 3);
 		col = (i % 3) + size - 8 - 3;
 		mod = ((bits >> i) & 1) === 1;
-		matrix.set(row, col, mod, true);
-		matrix.set(col, row, mod, true);
+		matrix.set(row, col, mod ? 1 : 0, true);
+		matrix.set(col, row, mod ? 1 : 0, true);
 	}
 }
 
@@ -147,19 +147,19 @@ function setupFormatInfo(
 		mod = ((bits >> i) & 1) === 1;
 		// vertical
 		if (i < 6) {
-			matrix.set(i, 8, mod, true);
+			matrix.set(i, 8, mod ? 1 : 0, true);
 		} else if (i < 8) {
-			matrix.set(i + 1, 8, mod, true);
+			matrix.set(i + 1, 8, mod ? 1 : 0, true);
 		} else {
-			matrix.set(size - 15 + i, 8, mod, true);
+			matrix.set(size - 15 + i, 8, mod ? 1 : 0, true);
 		}
 		// horizontal
 		if (i < 8) {
-			matrix.set(8, size - i - 1, mod, true);
+			matrix.set(8, size - i - 1, mod ? 1 : 0, true);
 		} else if (i < 9) {
-			matrix.set(8, 15 - i - 1 + 1, mod, true);
+			matrix.set(8, 15 - i - 1 + 1, mod ? 1 : 0, true);
 		} else {
-			matrix.set(8, 15 - i - 1, mod, true);
+			matrix.set(8, 15 - i - 1, mod ? 1 : 0, true);
 		}
 	}
 	// fixed module
@@ -189,7 +189,7 @@ function setupData(matrix: BitMatrix, data: Uint8Array) {
 					if (byteIndex < data.length) {
 						dark = ((data[byteIndex] >>> bitIndex) & 1) === 1;
 					}
-					matrix.set(row, col - c, dark, false);
+					matrix.set(row, col - c, dark ? 1 : 0, false);
 					bitIndex--;
 					if (bitIndex === -1) {
 						byteIndex++;
@@ -256,7 +256,7 @@ function createData(
 	// After adding the terminator, if the number of bits in the string is not a multiple of 8,
 	// pad the string on the right with 0s to make the string's length a multiple of 8.
 	while (buffer.getLengthInBits() % 8 !== 0) {
-		buffer.putBit(0);
+		buffer.putBit(false);
 	}
 	// Add pad bytes if the string is still shorter than the total number of required bits.
 	// Extend the buffer to fill the data capacity of the symbol corresponding to

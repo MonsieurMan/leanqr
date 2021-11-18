@@ -9,7 +9,7 @@ import { getSymbolSize } from './utils.js';
  * Alignment patterns are present only in QR Code symbols of version 2 or larger
  * and their number depends on the symbol version.
  */
-export function getRowColCoords(version) {
+export function getRowColCoords(version: number): number[] {
 	if (version === 1) return [];
 	const posCount = Math.floor(version / 7) + 2;
 	const size = getSymbolSize(version);
@@ -25,7 +25,7 @@ export function getRowColCoords(version) {
 	return positions.reverse();
 }
 
-export function getPositions(version) {
+export function getPositions(version: number): number[][] {
 	const coords = [];
 	const pos = getRowColCoords(version);
 	const posLength = pos.length;

@@ -19,14 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *****************************************************************************/
-export function singleSourceShortestPaths(graph, s, d) {
+
+export interface Graph {
+	[key: string]: {
+		[key: string]: number;
+	};
+}
+
+export function singleSourceShortestPaths(
+	graph: Graph,
+	s: string | number,
+	d?: string | number
+) {
 	// Predecessor map for each node that has been encountered.
 	// node ID => predecessor node ID
-	let predecessors = {};
+	let predecessors: { [key: string | number]: number | string } = {};
 
 	// Costs of shortest paths from s to all nodes encountered.
 	// node ID => cost
-	let costs = {};
+	let costs: {
+		[key: number | string]: number;
+	} = {};
 	costs[s] = 0;
 
 	// Costs of shortest paths from s to all nodes encountered; differs from
@@ -45,10 +58,11 @@ export function singleSourceShortestPaths(graph, s, d) {
 		cost_of_s_to_u_plus_cost_of_e,
 		cost_of_s_to_v,
 		first_visit;
+
 	while (!open.empty()) {
 		// In the nodes remaining in graph that have a known cost from s,
 		// find the node, u, that currently has the shortest path from s.
-		closest = open.pop();
+		closest = open.pop() as Item;
 		u = closest.value;
 		cost_of_s_to_u = closest.cost;
 
@@ -59,7 +73,7 @@ export function singleSourceShortestPaths(graph, s, d) {
 		// the cost of the shortest paths to any or all of those nodes as
 		// necessary. v is the node across the current edge from u.
 		for (v in adjacent_nodes) {
-			if (Object.hasOwn(adjacent_nodes, v)) {
+			if (adjacent_nodes.hasOwnProperty(v)) {
 				// Get the cost of the edge running from u to v.
 				cost_of_e = adjacent_nodes[v];
 
@@ -91,7 +105,10 @@ export function singleSourceShortestPaths(graph, s, d) {
 	return predecessors;
 }
 
-export function extractShortestPathFromPredecessorList(predecessors, d) {
+export function extractShortestPathFromPredecessorList(
+	predecessors: { [key: number | string]: number | string },
+	d?: number | string
+) {
 	let nodes = [];
 	let u = d;
 	// let predecessor;
@@ -104,18 +121,26 @@ export function extractShortestPathFromPredecessorList(predecessors, d) {
 	return nodes;
 }
 
-export function findPath(graph, s, d) {
+export function findPath(graph: Graph, s: string, d?: string) {
 	let predecessors = singleSourceShortestPaths(graph, s, d);
 	return extractShortestPathFromPredecessorList(predecessors, d);
 }
+
+interface Item {
+	cost: number;
+	value: any;
+}
+
+type CompareFn = (a: Item, b: Item) => number;
 
 /**
  * A very naive priority queue implementation.
  */
 class PriorityQueue {
-	queue = [];
+	queue: Item[] = [];
+	sorter: CompareFn = PriorityQueue.default_sorter;
 
-	default_sorter(a, b) {
+	static default_sorter(a: Item, b: Item) {
 		return a.cost - b.cost;
 	}
 
@@ -123,7 +148,7 @@ class PriorityQueue {
 	 * Add a new item to the queue and ensure the highest priority element
 	 * is at the front of the queue.
 	 */
-	push(value, cost) {
+	push(value: number | string, cost: number) {
 		let item = { value: value, cost: cost };
 		this.queue.push(item);
 		this.queue.sort(this.sorter);

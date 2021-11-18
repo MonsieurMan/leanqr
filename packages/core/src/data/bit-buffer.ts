@@ -1,21 +1,23 @@
 export class BitBuffer {
-	constructor() {
-		this.buffer = [];
-		this.length = 0;
-	}
-	get(index) {
+	public buffer: number[] = [];
+	private length: number = 0;
+
+	get(index: number) {
 		const bufIndex = Math.floor(index / 8);
 		return ((this.buffer[bufIndex] >>> (7 - (index % 8))) & 1) === 1;
 	}
-	put(num, length) {
+
+	put(num: number, length: number): void {
 		for (let i = 0; i < length; i++) {
 			this.putBit(((num >>> (length - i - 1)) & 1) === 1);
 		}
 	}
-	getLengthInBits() {
+
+	getLengthInBits(): number {
 		return this.length;
 	}
-	putBit(bit) {
+
+	putBit(bit: boolean): void {
 		const bufIndex = Math.floor(this.length / 8);
 		if (this.buffer.length <= bufIndex) {
 			this.buffer.push(0);
@@ -26,4 +28,3 @@ export class BitBuffer {
 		this.length++;
 	}
 }
-export default BitBuffer;

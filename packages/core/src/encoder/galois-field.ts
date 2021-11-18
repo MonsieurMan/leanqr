@@ -21,14 +21,17 @@ const LOG_TABLE = new Uint8Array(256);
 		EXP_TABLE[i] = EXP_TABLE[i - 255];
 	}
 })();
-export function log(n) {
+
+export function log(n: number): number {
 	if (n < 1) throw new Error('log(' + n + ')');
 	return LOG_TABLE[n];
 }
-export function exp(n) {
+
+export function exp(n: number): number {
 	return EXP_TABLE[n];
 }
-export function mul(x, y) {
+
+export function mul(x: number, y: number): number {
 	if (x === 0 || y === 0) return 0;
 	// should be EXP_TABLE[(LOG_TABLE[x] + LOG_TABLE[y]) % 255] if EXP_TABLE wasn't oversized
 	// @see {@link initTables}

@@ -1,11 +1,14 @@
 import * as Mode from '../encoder/mode.js';
 import * as Utils from '../encoder/utils.js';
+import { BitBuffer } from './bit-buffer.js';
+import { Data, DataAbstractClass } from './data.js';
 
 // TODO: Should move from core.
-export class KanjiData {
-	constructor(data) {
-		this.mode = Mode.KANJI;
-		this.data = data;
+export class KanjiData extends DataAbstractClass {
+	public mode: Mode.Mode = Mode.KANJI;
+
+	constructor(data: string) {
+		super(data);
 	}
 	getLength() {
 		return this.data.length;
@@ -13,7 +16,7 @@ export class KanjiData {
 	getBitsLength() {
 		return KanjiData.getBitsLength(this.data.length);
 	}
-	write(bitBuffer) {
+	write(bitBuffer: BitBuffer) {
 		let i;
 		// In the Shift JIS system, Kanji characters are represented by a two byte combination.
 		// These byte values are shifted from the JIS X 0208 values.
@@ -43,7 +46,7 @@ export class KanjiData {
 			bitBuffer.put(value, 13);
 		}
 	}
-	static getBitsLength(length) {
+	static getBitsLength(length: number) {
 		return length * 13;
 	}
 }

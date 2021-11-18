@@ -1,4 +1,6 @@
 import * as Mode from '../encoder/mode.js';
+import { BitBuffer } from './bit-buffer.js';
+import { Data, DataAbstractClass } from './data.js';
 
 /**
  * Array of characters available in alphanumeric mode
@@ -57,9 +59,10 @@ const ALPHA_NUM_CHARS = [
 	':',
 ];
 
-export class AlphanumericData {
-	constructor(data) {
-		this.mode = Mode.ALPHANUMERIC;
+export class AlphanumericData extends DataAbstractClass {
+	public mode: Mode.Mode = Mode.ALPHANUMERIC;
+	constructor(data: string) {
+		super(data);
 		this.data = data;
 	}
 
@@ -71,7 +74,7 @@ export class AlphanumericData {
 		return AlphanumericData.getBitsLength(this.data.length);
 	}
 
-	write(bitBuffer) {
+	write(bitBuffer: BitBuffer) {
 		let i;
 		// Input data characters are divided into groups of two characters
 		// and encoded as 11-bit binary codes.
@@ -90,7 +93,7 @@ export class AlphanumericData {
 		}
 	}
 
-	static getBitsLength(length) {
+	static getBitsLength(length: number) {
 		return 11 * Math.floor(length / 2) + 6 * (length % 2);
 	}
 }

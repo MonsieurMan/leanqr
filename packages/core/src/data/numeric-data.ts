@@ -1,17 +1,22 @@
 import * as Mode from '../encoder/mode.js';
+import { BitBuffer } from './bit-buffer.js';
+import { DataAbstractClass } from './data.js';
 
-export class NumericData {
-	constructor(data) {
-		this.mode = Mode.NUMERIC;
+export class NumericData extends DataAbstractClass {
+	public mode = Mode.NUMERIC;
+
+	constructor(data: string) {
+		super(data);
 		this.data = data.toString();
 	}
+
 	getLength() {
 		return this.data.length;
 	}
 	getBitsLength() {
 		return NumericData.getBitsLength(this.data.length);
 	}
-	write(bitBuffer) {
+	write(bitBuffer: BitBuffer) {
 		let i, group, value;
 		// The input data string is divided into groups of three digits,
 		// and each group is converted to its 10-bit binary equivalent.
@@ -29,7 +34,7 @@ export class NumericData {
 			bitBuffer.put(value, remainingNum * 3 + 1);
 		}
 	}
-	static getBitsLength(length) {
+	static getBitsLength(length: number) {
 		return 10 * Math.floor(length / 3) + (length % 3 ? (length % 3) * 3 + 1 : 0);
 	}
 }

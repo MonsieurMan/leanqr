@@ -27,7 +27,10 @@ const EC_CODEWORDS_TABLE = [
 	2310, 750, 1372, 2040, 2430,
 ];
 
-export function getBlocksCount(version, errorCorrectionLevel) {
+export function getBlocksCount(
+	version: number,
+	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits
+) {
 	switch (errorCorrectionLevel) {
 		case ECLevel.L:
 			return EC_BLOCKS_TABLE[(version - 1) * 4 + 0];
@@ -38,11 +41,14 @@ export function getBlocksCount(version, errorCorrectionLevel) {
 		case ECLevel.H:
 			return EC_BLOCKS_TABLE[(version - 1) * 4 + 3];
 		default:
-			throw new Error('Unknown ErrorCorrectionLevel: ' + string);
+			throw new Error('Unknown ErrorCorrectionLevel: ' + errorCorrectionLevel);
 	}
 }
 
-export function getTotalCodewordsCount(version, errorCorrectionLevel) {
+export function getTotalCodewordsCount(
+	version: number,
+	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits
+): number {
 	switch (errorCorrectionLevel) {
 		case ECLevel.L:
 			return EC_CODEWORDS_TABLE[(version - 1) * 4 + 0];

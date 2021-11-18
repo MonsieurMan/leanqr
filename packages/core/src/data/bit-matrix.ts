@@ -4,7 +4,10 @@
  * @param {Number} size Symbol size
  */
 export class BitMatrix {
-	constructor(size) {
+	public data: Uint8Array;
+	public reservedBit: Uint8Array;
+
+	constructor(public readonly size: number) {
 		if (!size || size < 1) {
 			throw new Error('BitMatrix size must be defined and greater than 0');
 		}
@@ -19,15 +22,16 @@ export class BitMatrix {
 	 *
 	 * @param {Number}  row
 	 * @param {Number}  col
-	 * @param {Boolean|Number} value // FIXME: is this really boolean|number ?
+	 * @param {Number} value
 	 * @param {Boolean} reserved
 	 */
-	set(row, col, value, reserved) {
+	set(row: number, col: number, value: number, reserved: boolean): void {
 		const index = row * this.size + col;
 		this.data[index] = value;
 
 		if (reserved) {
-			this.reservedBit[index] = true;
+			// Replaced from 'true'
+			this.reservedBit[index] = 1;
 		}
 	}
 
@@ -36,9 +40,9 @@ export class BitMatrix {
 	 *
 	 * @param  {Number}  row
 	 * @param  {Number}  col
-	 * @return {Boolean}
+	 * @return {Number}
 	 */
-	get(row, col) {
+	get(row: number, col: number): number {
 		return this.data[row * this.size + col];
 	}
 
@@ -48,9 +52,9 @@ export class BitMatrix {
 	 *
 	 * @param {Number}  row
 	 * @param {Number}  col
-	 * @param {Boolean} value
+	 * @param {Number} value
 	 */
-	xor(row, col, value) {
+	xor(row: number, col: number, value: number) {
 		this.data[row * this.size + col] ^= value;
 	}
 
@@ -59,9 +63,9 @@ export class BitMatrix {
 	 *
 	 * @param {Number}   row
 	 * @param {Number}   col
-	 * @return {Boolean}
+	 * @return {Number}
 	 */
-	isReserved(row, col) {
+	isReserved(row: number, col: number): number {
 		return this.reservedBit[row * this.size + col];
 	}
 }
