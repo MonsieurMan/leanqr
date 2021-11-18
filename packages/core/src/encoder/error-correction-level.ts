@@ -2,7 +2,7 @@ export type ErrorCorrectionLevel = 'low' | 'medium' | 'high' | 'quartile';
 export interface ErrorCorrectionLevelBits {
 	bit: number;
 }
-function fromString(string: ErrorCorrectionLevel): ErrorCorrectionLevelBits {
+function fromString(string: string): ErrorCorrectionLevelBits {
 	if (typeof string !== 'string') {
 		throw new Error('Param is not a string');
 	}
@@ -31,20 +31,20 @@ export const Q: ErrorCorrectionLevelBits = { bit: 3 };
 export const H: ErrorCorrectionLevelBits = { bit: 2 };
 
 // TODO: get rid with TS ?
-export function isValid(level: ErrorCorrectionLevelBits) {
+export function isValid(level: ErrorCorrectionLevelBits | undefined) {
 	return (
 		level && typeof level.bit !== 'undefined' && level.bit >= 0 && level.bit < 4
 	);
 }
 
 export function from(
-	value: ErrorCorrectionLevel | ErrorCorrectionLevelBits,
-	defaultValue: ErrorCorrectionLevelBits
+	value: ErrorCorrectionLevel | ErrorCorrectionLevelBits | string | undefined,
+	defaultValue?: ErrorCorrectionLevelBits
 ) {
 	try {
 		if (typeof value === 'string') {
 			return fromString(value);
-		} else if (isValid(value)) {
+		} else if (value && isValid(value)) {
 			return value;
 		}
 	} catch (error) {

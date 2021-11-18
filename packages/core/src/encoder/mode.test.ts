@@ -61,7 +61,7 @@ test('Char count bits', function (t) {
 		t.equal(Mode.getCharCountIndicator(Mode.KANJI, v), EXPECTED_BITS.kanji[2]);
 	}
 	t.throws(function () {
-		Mode.getCharCountIndicator({}, 1);
+		Mode.getCharCountIndicator({} as any, 1);
 	}, 'Should throw if mode is invalid');
 	t.throws(function () {
 		Mode.getCharCountIndicator(Mode.BYTE, 0);
@@ -70,7 +70,7 @@ test('Char count bits', function (t) {
 });
 test('Best mode', function (t) {
 	/* eslint-disable quote-props */
-	const EXPECTED_MODE = {
+	const EXPECTED_MODE: { [key: string | number | symbol]: Mode.Mode } = {
 		12345: Mode.NUMERIC,
 		abcde: Mode.BYTE,
 		'1234a': Mode.BYTE,
@@ -121,7 +121,7 @@ test('From value', function (t) {
 		'Should return default value if mode is invalid'
 	);
 	t.equal(
-		Mode.from(null, Mode.NUMERIC),
+		Mode.from(null as any, Mode.NUMERIC),
 		Mode.NUMERIC,
 		'Should return default value if mode undefined'
 	);
@@ -133,7 +133,7 @@ test('To string', function (t) {
 	t.equal(Mode.toString(Mode.BYTE), 'Byte');
 	t.equal(Mode.toString(Mode.KANJI), 'Kanji');
 	t.throws(function () {
-		Mode.toString({});
+		Mode.toString({} as any);
 	}, 'Should throw if mode is invalid');
 	t.end();
 });

@@ -1,6 +1,7 @@
 import tap from 'tap';
 import { BitBuffer } from './bit-buffer.js';
 const test = tap.test;
+
 test('Bit Buffer', function (t) {
 	const testData = 0x41; // 'A'
 	const expectedDataBits = [

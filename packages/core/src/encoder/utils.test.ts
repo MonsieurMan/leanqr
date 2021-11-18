@@ -62,7 +62,7 @@ test('Set/Get SJIS function', function (t) {
 		Utils.isKanjiModeEnabled(),
 		'Kanji mode should be disabled if "toSJIS" function is not set'
 	);
-	const testFunc = function testFunc(c) {
+	const testFunc = function testFunc(c: string) {
 		return 'test_' + c;
 	};
 	Utils.setToSJISFunction(testFunc);

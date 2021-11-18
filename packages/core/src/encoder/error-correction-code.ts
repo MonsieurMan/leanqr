@@ -47,7 +47,7 @@ export function getBlocksCount(
 
 export function getTotalCodewordsCount(
 	version: number,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits
+	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits
 ): number {
 	switch (errorCorrectionLevel) {
 		case ECLevel.L:

@@ -1,6 +1,7 @@
 import tap from 'tap';
 import * as Poly from './polynomial.js';
 const test = tap.test;
+
 test('Generator polynomial', function (t) {
 	const result = Poly.generateECPolynomial(0);
 	t.ok(result instanceof Uint8Array, 'Should return an Uint8Array');
@@ -19,8 +20,8 @@ test('Generator polynomial', function (t) {
 	t.end();
 });
 test('Polynomial', function (t) {
-	const p1 = [0, 1, 2, 3, 4];
-	const p2 = [5, 6];
+	const p1 = new Uint8Array([0, 1, 2, 3, 4]);
+	const p2 = new Uint8Array([5, 6]);
 	let result = Poly.mul(p1, p2);
 	t.ok(result instanceof Uint8Array, 'Should return an Uint8Array');
 	t.equal(result.length, 6, 'Should return correct number of coefficients');

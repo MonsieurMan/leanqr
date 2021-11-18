@@ -1,3 +1,8 @@
+/**
+ * TODO: Document why we need galois fields.
+ * https://en.wikipedia.org/wiki/Finite_field
+ */
+
 const EXP_TABLE = new Uint8Array(512);
 const LOG_TABLE = new Uint8Array(256);
 (function initTables() {

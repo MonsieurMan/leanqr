@@ -1,5 +1,5 @@
 import tap from 'tap';
-import BitBuffer from './bit-buffer.js';
+import { BitBuffer } from './bit-buffer.js';
 import KanjiData from './kanji-data.js';
 import * as Mode from '../encoder/mode.js';
 import { toSJIS } from '../sjis/to-sjis.js';

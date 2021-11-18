@@ -89,12 +89,15 @@ export function isValid(mode?: any): mode is Mode {
 	return mode && mode.bit && mode.ccBits;
 }
 
-export function from(value: Mode | string, defaultValue: Mode): Mode {
+export function from(
+	value: Mode | string | undefined,
+	defaultValue: Mode = NUMERIC
+): Mode {
 	if (isValid(value)) {
 		return value;
 	}
 	try {
-		return fromString(value);
+		return value ? fromString(value) : defaultValue;
 	} catch (e) {
 		return defaultValue;
 	}

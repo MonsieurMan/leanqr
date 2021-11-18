@@ -7,7 +7,7 @@ test('Reed-Solomon encoder', function (t) {
 	let enc = new RS();
 	t.notOk(enc.genPoly, 'Should have an undefined generator polynomial');
 	t.throws(function () {
-		enc.encode([]);
+		enc.encode(new Uint8Array());
 	}, 'Should throw if generator polynomial is undefined');
 	enc.initialize(2);
 	t.equal(enc.degree, 2, 'Should set correct degree value');

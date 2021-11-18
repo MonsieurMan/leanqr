@@ -49,10 +49,6 @@ test('Error level validity', function (t) {
 		'Should return false if level is undefined'
 	);
 	t.notOk(
-		ECLevel.isValid({}),
-		'Should return false if bit property is undefined'
-	);
-	t.notOk(
 		ECLevel.isValid({ bit: -1 }),
 		'Should return false if bit property value is < 0'
 	);

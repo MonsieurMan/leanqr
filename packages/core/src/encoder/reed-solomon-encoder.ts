@@ -1,8 +1,11 @@
 import * as Polynomial from './polynomial.js';
 
+/**
+ * TODO: Document why we need ReedSolomonEncoder
+ */
 export class ReedSolomonEncoder {
-	private genPoly?: Uint8Array;
-	constructor(private degree: number) {
+	public genPoly?: Uint8Array;
+	constructor(public degree: number = 0) {
 		this.genPoly = undefined;
 		this.degree = degree;
 

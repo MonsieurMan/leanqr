@@ -1,5 +1,5 @@
 // FIXME: Global function, eurk.
-let toSJISFunction;
+let toSJISFunction: (data: string) => string;
 
 const CODEWORDS_COUNT = [
 	0, 26, 44, 70, 100, 134, 172, 196, 242, 292, 346, 404, 466, 532, 581, 655, 733,
@@ -7,18 +7,18 @@ const CODEWORDS_COUNT = [
 	2185, 2323, 2465, 2611, 2761, 2876, 3034, 3196, 3362, 3532, 3706,
 ];
 
-export function getSymbolSize(version) {
+export function getSymbolSize(version?: number) {
 	if (!version) throw new Error('"version" cannot be null or undefined');
 	if (version < 1 || version > 40)
 		throw new Error('"version" should be in range from 1 to 40');
 	return version * 4 + 17;
 }
 
-export function getSymbolTotalCodewords(version) {
+export function getSymbolTotalCodewords(version: number) {
 	return CODEWORDS_COUNT[version];
 }
 
-export const getBCHDigit = function (data) {
+export const getBCHDigit = function (data: number) {
 	let digit = 0;
 	while (data !== 0) {
 		digit++;
@@ -27,7 +27,7 @@ export const getBCHDigit = function (data) {
 	return digit;
 };
 
-export function setToSJISFunction(f) {
+export function setToSJISFunction(f?: (data: string) => string) {
 	if (typeof f !== 'function') {
 		throw new Error('"toSJISFunc" is not a valid function.');
 	}
@@ -38,6 +38,6 @@ export const isKanjiModeEnabled = function () {
 	return typeof toSJISFunction !== 'undefined';
 };
 
-export function toSJIS(kanji) {
+export function toSJIS(kanji: string) {
 	return toSJISFunction(kanji);
 }

@@ -7,7 +7,7 @@ export class ByteData extends DataAbstractClass {
 	constructor(data: string) {
 		super(data);
 		const textEncoder = new TextEncoder();
-		this.data = textEncoder.encode(data).toString(); // FIXME: Is the toString a good idea here?
+		this.data = textEncoder.encode(data) as any; // FIXME: Typing problem
 	}
 	getLength() {
 		return this.data.length;

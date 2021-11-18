@@ -22,14 +22,14 @@ export const BYTE = new RegExp(byte, 'g');
 export const NUMERIC = new RegExp(numeric, 'g');
 export const ALPHANUMERIC = new RegExp(alphanumeric, 'g');
 
-export function testKanji(str) {
+export function testKanji(str: string) {
 	return TEST_KANJI.test(str);
 }
 
-export function testNumeric(str) {
+export function testNumeric(str: string) {
 	return TEST_NUMERIC.test(str);
 }
 
-export function testAlphanumeric(str) {
+export function testAlphanumeric(str: string) {
 	return TEST_ALPHANUMERIC.test(str);
 }

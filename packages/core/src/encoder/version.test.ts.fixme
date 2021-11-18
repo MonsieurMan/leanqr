@@ -1,16 +1,16 @@
 import tap from 'tap';
 
 import * as Version from './version.js';
-import * as VersionCheck from './version-check.js';
 import * as ECLevel from './error-correction-level.js';
 import * as Mode from './mode.js';
 import { NumericData } from '../data/numeric-data.js';
 import { AlphanumericData } from '../data/alphanumeric-data.js';
 import { KanjiData } from '../data/kanji-data.js';
 import { ByteData } from '../data/byte-data.js';
+import { Data, DataAbstractClass } from '../data/data.js';
 
 const test = tap.test;
-
+// FIXME: TESTS ARE BROKEN.
 const EC_LEVELS = [ECLevel.L, ECLevel.M, ECLevel.Q, ECLevel.H];
 
 const EXPECTED_NUMERIC_CAPACITY = [
@@ -194,19 +194,9 @@ const EXPECTED_VERSION_BITS = [
 ];
 
 test('Version validity', function (t) {
-	t.notOk(VersionCheck.isValid(), 'Should return false if no input');
-	t.notOk(
-		VersionCheck.isValid(''),
-		'Should return false if version is not a number'
-	);
-	t.notOk(
-		VersionCheck.isValid(0),
-		'Should return false if version is not in range'
-	);
-	t.notOk(
-		VersionCheck.isValid(41),
-		'Should return false if version is not in range'
-	);
+	t.notOk(Version.isValid(), 'Should return false if no input');
+	t.notOk(Version.isValid(0), 'Should return false if version is not in range');
+	t.notOk(Version.isValid(41), 'Should return false if version is not in range');
 	t.end();
 });
 
@@ -228,17 +218,13 @@ test('Version from value', function (t) {
 
 test('Version capacity', function (t) {
 	t.throws(function () {
-		Version.getCapacity();
-	}, 'Should throw if version is undefined');
-	t.throws(function () {
-		Version.getCapacity('');
-	}, 'Should throw if version is not a number');
-	t.throws(function () {
-		Version.getCapacity(0);
+		Version.getCapacity(0, EC_LEVELS[1], Mode.NUMERIC);
 	}, 'Should throw if version is not in range');
+
 	t.throws(function () {
-		Version.getCapacity(41);
+		Version.getCapacity(41, EC_LEVELS[1], Mode.NUMERIC);
 	}, 'Should throw if version is not in range');
+
 	for (let l = 0; l < EC_LEVELS.length; l++) {
 		for (let i = 1; i <= 40; i++) {
 			t.equal(
@@ -272,7 +258,10 @@ test('Version capacity', function (t) {
 });
 
 test('Version best match', function (t) {
-	function testBestVersionForCapacity(expectedCapacity, DataCtor) {
+	function testBestVersionForCapacity(
+		expectedCapacity: number[][],
+		DataCtor: new (param: string) => DataAbstractClass
+	) {
 		for (let v = 0; v < 40; v++) {
 			for (let l = 0; l < EC_LEVELS.length; l++) {
 				const capacity = expectedCapacity[v][l];
@@ -289,12 +278,12 @@ test('Version best match', function (t) {
 				);
 				if (l === 1) {
 					t.equal(
-						Version.getBestVersionForData(data, null),
+						Version.getBestVersionForData(data),
 						v + 1,
 						'Should return best version for ECLevel.M if error level is undefined'
 					);
 					t.equal(
-						Version.getBestVersionForData([data], null),
+						Version.getBestVersionForData([data]),
 						v + 1,
 						'Should return best version for ECLevel.M if error level is undefined'
 					);
@@ -340,7 +329,7 @@ test('Version best match', function (t) {
 });
 
 test('Version encoded info', function (t) {
-	let v;
+	let v: number;
 	for (v = 0; v < 7; v++) {
 		t.throws(function () {
 			Version.getEncodedBits(v);

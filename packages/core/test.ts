@@ -11,6 +11,6 @@ const opt = {
 };
 spawn(
 	'../../node_modules/.bin/tap',
-	['--cov', '--100', process.argv[2] || 'src/**/*.test.js'],
+	['--cov', '--100', process.argv[2] || 'src/**/*.test.ts'],
 	opt
 );

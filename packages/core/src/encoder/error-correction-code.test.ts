@@ -26,8 +26,8 @@ test('Error correction codewords', function (t) {
 			);
 		}
 	}
-	t.equal(
-		ECCode.getTotalCodewordsCount(1),
+	t.throws(
+		() => ECCode.getTotalCodewordsCount(1),
 		undefined,
 		'Should return undefined if EC level is not specified'
 	);
@@ -41,8 +41,8 @@ test('Error correction blocks', function (t) {
 			t.ok(ECCode.getBlocksCount(v, levels[l]), 'Should return a positive number');
 		}
 	}
-	t.equal(
-		ECCode.getBlocksCount(1),
+	t.throws(
+		() => ECCode.getBlocksCount(1, undefined as any),
 		undefined,
 		'Should return undefined if EC level is not specified'
 	);

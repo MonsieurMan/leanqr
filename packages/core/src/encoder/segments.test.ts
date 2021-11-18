@@ -165,20 +165,13 @@ test('Segments from array', function (t) {
 	);
 	t.same(
 		Segments.fromArray([
-			{ data: 'abcdef', mode: Mode.BYTE },
-			{ data: '12345', mode: Mode.NUMERIC },
+			{ data: 'abcdef', mode: Mode.BYTE, index: 0, length: 0 },
+			{ data: '12345', mode: Mode.NUMERIC, index: 0, length: 0 },
 		]),
 		[new ByteData('abcdef'), new NumericData('12345')],
 		'Should return correct segment from array of objects'
 	);
-	t.same(
-		Segments.fromArray([
-			{ data: 'abcdef', mode: 'byte' },
-			{ data: '12345', mode: 'numeric' },
-		]),
-		[new ByteData('abcdef'), new NumericData('12345')],
-		'Should return correct segment from array of objects if mode is specified as string'
-	);
+
 	t.same(
 		Segments.fromArray([{ data: 'abcdef' }, { data: '12345' }]),
 		[new ByteData('abcdef'), new NumericData('12345')],
@@ -186,7 +179,7 @@ test('Segments from array', function (t) {
 	);
 	t.same(Segments.fromArray([{}]), [], 'Should return an empty array');
 	t.throws(function () {
-		Segments.fromArray([{ data: 'ABCDE', mode: 'numeric' }]);
+		Segments.fromArray([{ data: 'ABCDE', mode: Mode.NUMERIC }]);
 	}, 'Should throw if segment cannot be encoded with specified mode');
 	t.same(
 		Segments.fromArray([{ data: '０１２３', mode: Mode.KANJI }]),

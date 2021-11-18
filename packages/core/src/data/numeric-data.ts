@@ -5,9 +5,8 @@ import { DataAbstractClass } from './data.js';
 export class NumericData extends DataAbstractClass {
 	public mode = Mode.NUMERIC;
 
-	constructor(data: string) {
-		super(data);
-		this.data = data.toString();
+	constructor(data: number | string) {
+		super(data.toString());
 	}
 
 	getLength() {

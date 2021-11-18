@@ -24,11 +24,15 @@ export class KanjiData extends DataAbstractClass {
 		for (i = 0; i < this.data.length; i++) {
 			let value = Utils.toSJIS(this.data[i]);
 			// For characters with Shift JIS values from 0x8140 to 0x9FFC:
+			// @ts-ignore
 			if (value >= 0x8140 && value <= 0x9ffc) {
 				// Subtract 0x8140 from Shift JIS value
+				// @ts-ignore
 				value -= 0x8140;
 				// For characters with Shift JIS values from 0xE040 to 0xEBBF
+				// @ts-ignore
 			} else if (value >= 0xe040 && value <= 0xebbf) {
+				// @ts-ignore
 				// Subtract 0xC140 from Shift JIS value
 				value -= 0xc140;
 			} else {
@@ -39,9 +43,11 @@ export class KanjiData extends DataAbstractClass {
 						'Make sure your charset is UTF-8'
 				);
 			}
+			// @ts-ignore
 			// Multiply most significant byte of result by 0xC0
 			// and add least significant byte to product
 			value = ((value >>> 8) & 0xff) * 0xc0 + (value & 0xff);
+			// @ts-ignore
 			// Convert result to a 13-bit binary string
 			bitBuffer.put(value, 13);
 		}

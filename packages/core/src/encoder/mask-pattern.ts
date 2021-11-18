@@ -1,5 +1,9 @@
+import { BitMatrix } from '../data/bit-matrix';
+import { ErrorCorrectionLevelBits } from './error-correction-level';
+
 /**
- * Weighted penalty scores for the undesirable features
+ * Weighted penalty scores for the undesirable features.
+ * TODO: Converted to enum
  * @type {Object}
  */
 const PenaltyScores = {
@@ -17,7 +21,7 @@ const PenaltyScores = {
  * @param  {Number} j           Column
  * @return {Boolean}            Mask value
  */
-function getMaskAt(maskPattern, i, j) {
+function getMaskAt(maskPattern: number, i: number, j: number): boolean {
 	switch (maskPattern) {
 		case Patterns.PATTERN000:
 			return (i + j) % 2 === 0;
@@ -40,6 +44,7 @@ function getMaskAt(maskPattern, i, j) {
 	}
 }
 
+// TODO: Convert to enum
 export const Patterns = {
 	PATTERN000: 0,
 	PATTERN001: 1,
@@ -51,21 +56,22 @@ export const Patterns = {
 	PATTERN111: 7,
 };
 
-export function isValid(mask) {
+export function isValid(mask?: any): boolean {
 	return mask != null && mask !== '' && !isNaN(mask) && mask >= 0 && mask <= 7;
 }
 
-export function from(value) {
+export function from(value: any): number | undefined {
 	return isValid(value) ? parseInt(value, 10) : undefined;
 }
 
-export function getPenaltyN1(data) {
+export function getPenaltyN1(data: BitMatrix) {
 	const size = data.size;
 	let points = 0;
 	let sameCountCol = 0;
 	let sameCountRow = 0;
 	let lastCol = null;
 	let lastRow = null;
+
 	for (let row = 0; row < size; row++) {
 		sameCountCol = sameCountRow = 0;
 		lastCol = lastRow = null;
@@ -93,9 +99,10 @@ export function getPenaltyN1(data) {
 	return points;
 }
 
-export function getPenaltyN2(data) {
+export function getPenaltyN2(data: BitMatrix) {
 	const size = data.size;
 	let points = 0;
+
 	for (let row = 0; row < size - 1; row++) {
 		for (let col = 0; col < size - 1; col++) {
 			const last =
@@ -106,14 +113,16 @@ export function getPenaltyN2(data) {
 			if (last === 4 || last === 0) points++;
 		}
 	}
+
 	return points * PenaltyScores.N2;
 }
 
-export function getPenaltyN3(data) {
+export function getPenaltyN3(data: BitMatrix) {
 	const size = data.size;
 	let points = 0;
 	let bitsCol = 0;
 	let bitsRow = 0;
+
 	for (let row = 0; row < size; row++) {
 		bitsCol = bitsRow = 0;
 		for (let col = 0; col < size; col++) {
@@ -123,28 +132,39 @@ export function getPenaltyN3(data) {
 			if (col >= 10 && (bitsRow === 0x5d0 || bitsRow === 0x05d)) points++;
 		}
 	}
+
 	return points * PenaltyScores.N3;
 }
 
-export function getPenaltyN4(data) {
+export function getPenaltyN4(data: BitMatrix) {
 	let darkCount = 0;
 	const modulesCount = data.data.length;
-	for (let i = 0; i < modulesCount; i++) darkCount += data.data[i];
+
+	for (let i = 0; i < modulesCount; i++) {
+		darkCount += data.data[i];
+	}
+
 	const k = Math.abs(Math.ceil((darkCount * 100) / modulesCount / 5) - 10);
 	return k * PenaltyScores.N4;
 }
 
-export function applyMask(pattern, data) {
+export function applyMask(pattern: number, data: BitMatrix) {
 	const size = data.size;
+
 	for (let col = 0; col < size; col++) {
 		for (let row = 0; row < size; row++) {
-			if (data.isReserved(row, col)) continue;
-			data.xor(row, col, getMaskAt(pattern, row, col));
+			if (data.isReserved(row, col)) {
+				continue;
+			}
+			data.xor(row, col, getMaskAt(pattern, row, col) ? 1 : 0);
 		}
 	}
 }
 
-export function getBestMask(data, setupFormatFunc) {
+export function getBestMask(
+	data: BitMatrix,
+	setupFormatFunc: (maskPattern: number) => void
+) {
 	const numPatterns = Object.keys(Patterns).length;
 	let bestPattern = 0;
 	let lowerPenalty = Infinity;

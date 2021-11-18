@@ -20,7 +20,7 @@ const G18_BCH = Utils.getBCHDigit(G18);
 function getBestVersionForDataLength(
 	mode: Mode.Mode,
 	length: number,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits
+	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits
 ) {
 	for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
 		if (length <= getCapacity(currentVersion, errorCorrectionLevel, mode)) {
@@ -50,7 +50,7 @@ function getTotalBitsFromDataArray(
 
 function getBestVersionForMixedData(
 	segments: Array<DataAbstractClass>,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits
+	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits
 ) {
 	for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
 		const length = getTotalBitsFromDataArray(segments, currentVersion);
@@ -76,14 +76,14 @@ export function from(value: unknown, defaultValue: number = 1): number {
 	return isValid(testValue) ? testValue : defaultValue;
 }
 
-export function isValid(version: number) {
-	return !isNaN(version) && version >= 1 && version <= 40;
+export function isValid(version?: number) {
+	return version && !isNaN(version) && version >= 1 && version <= 40;
 }
 
 export function getCapacity(
 	version: number,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits,
-	mode: Mode.Mode
+	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits,
+	mode?: Mode.Mode
 ): number {
 	if (!isValid(version)) {
 		throw new Error('Invalid QR Code version');
@@ -128,7 +128,7 @@ export function getCapacity(
  */
 export function getBestVersionForData(
 	data: DataAbstractClass | Array<DataAbstractClass>,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits
+	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits
 ): number | undefined {
 	let seg;
 	const ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M);

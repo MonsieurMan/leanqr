@@ -259,7 +259,7 @@ function buildGraph(nodes: Array<Array<Data>>, version: number): Graph {
  */
 function buildSingleSegment(
 	data: string,
-	modesHint: string | Mode.Mode
+	modesHint?: string | Mode.Mode
 ): DataAbstractClass {
 	let mode;
 	const bestMode = Mode.getBestModeForData(data);
@@ -295,7 +295,7 @@ function buildSingleSegment(
 			throw new Error('Unknown mode ' + mode);
 	}
 }
-export function fromArray(array: Array<Data | string>) {
+export function fromArray(array: Array<Partial<Data> | string>) {
 	return array.reduce(function (acc, seg) {
 		if (typeof seg === 'string') {
 			acc.push(buildSingleSegment(seg, 'fuck this codebase'));
