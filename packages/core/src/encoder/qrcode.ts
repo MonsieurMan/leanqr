@@ -1,16 +1,17 @@
 import * as Utils from './utils.js';
-import * as ECLevel from './error-correction-level.js';
+import * as ECLevel from '../error-correction/error-correction-level.js';
 import { BitMatrix } from '../data/bit-matrix.js';
-import * as AlignmentPattern from './alignment-pattern.js';
-import * as FinderPattern from './finder-pattern.js';
-import * as MaskPattern from './mask-pattern.js';
-import * as ECCode from './error-correction-code.js';
-import ReedSolomonEncoder from './reed-solomon-encoder.js';
+import * as AlignmentPattern from '../data/alignment-pattern.js';
+import * as FinderPattern from '../data/finder-pattern.js';
+import * as MaskPattern from '../data/mask-pattern.js';
+import * as ECCode from '../error-correction/error-correction-code.js';
+import ReedSolomonEncoder from '../error-correction/reed-solomon-encoder.js';
 import * as Version from './version.js';
-import * as FormatInfo from './format-info.js';
-import * as Mode from './mode.js';
+import * as FormatInfo from '../data/format-info.js';
+import * as Mode from '../mode/mode.js';
 import * as Segments from './segments.js';
 import { BitBuffer } from '../data/bit-buffer.js';
+import { ErrorCorrectionLevelBits, EncodedQRCode, EncodingOption } from '../models/index.js';
 
 /**
  * QRCode for JavaScript
@@ -37,6 +38,7 @@ import { BitBuffer } from '../data/bit-buffer.js';
 //
 //---------------------------------------------------------------------
 */
+
 /**
  * Add finder patterns bits to matrix
  *
@@ -136,7 +138,7 @@ function setupVersionInfo(matrix: BitMatrix, version: number) {
  */
 function setupFormatInfo(
 	matrix: BitMatrix,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits,
+	errorCorrectionLevel: ErrorCorrectionLevelBits,
 	maskPattern: number
 ) {
 	const size = matrix.size;
@@ -217,7 +219,7 @@ function setupData(matrix: BitMatrix, data: Uint8Array) {
  */
 function createData(
 	version: number,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits,
+	errorCorrectionLevel: ErrorCorrectionLevelBits,
 	segments: any[] // FIXME: fix typing
 ): Uint8Array {
 	// Prepare data buffer
@@ -281,7 +283,7 @@ function createData(
 function createCodewords(
 	bitBuffer: BitBuffer,
 	version: number,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits
+	errorCorrectionLevel: ErrorCorrectionLevelBits
 ): Uint8Array {
 	// Total codewords for this QR code version (Data + Error correction)
 	const totalCodewords = Utils.getSymbolTotalCodewords(version);
@@ -359,7 +361,7 @@ function createCodewords(
 function createSymbol(
 	data: string,
 	version: number | undefined,
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits,
+	errorCorrectionLevel: ErrorCorrectionLevelBits,
 	maskPattern: number | undefined
 ): EncodedQRCode {
 	let segments;
@@ -453,26 +455,6 @@ function createSymbol(
 	};
 }
 
-export interface Module {
-	size: number;
-	data: Uint8Array;
-	reservedBit: Uint8Array;
-}
-
-export interface EncodedQRCode {
-	modules: Module;
-	version: number;
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevelBits;
-	maskPattern: number | undefined;
-	segments: any[]; // ByteData
-}
-
-export interface EncodingOption {
-	version: number;
-	maskPattern: number;
-	toSJISFunc: () => any;
-	errorCorrectionLevel: ECLevel.ErrorCorrectionLevel;
-}
 
 export function encode(data: string, options: EncodingOption): EncodedQRCode {
 	if (typeof data === 'undefined' || data === '') {

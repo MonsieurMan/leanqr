@@ -1,8 +1,21 @@
+/**
+ * QRCode version ranges from 1 to 40, translated directly to 
+ * the counts of modules used. 
+ * Each version increases module count by 4.
+ * 
+ * It directly impacts the encoding capacity, the higher the version
+ * the more data you can encode as a QRCode.
+ * 
+ * Version 1 -> 21x21 modules
+ * Version 40 -> 177x177 modules
+ */
+
 import * as Utils from './utils.js';
-import * as ECCode from './error-correction-code.js';
-import * as ECLevel from './error-correction-level.js';
-import * as Mode from './mode.js';
-import { Data, DataAbstractClass } from '../data/data.js';
+import * as ECCode from '../error-correction/error-correction-code.js';
+import * as ECLevel from '../error-correction/error-correction-level.js';
+import * as Mode from '../mode/mode.js';
+import { InputTypeClass } from '../mode/input-type';
+import { ErrorCorrectionLevelBits } from '../models/index.js';
 
 // Generator polynomial used to encode version information
 const G18 =
@@ -20,7 +33,7 @@ const G18_BCH = Utils.getBCHDigit(G18);
 function getBestVersionForDataLength(
 	mode: Mode.Mode,
 	length: number,
-	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits
+	errorCorrectionLevel?: ErrorCorrectionLevelBits
 ) {
 	for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
 		if (length <= getCapacity(currentVersion, errorCorrectionLevel, mode)) {
@@ -37,7 +50,7 @@ function getReservedBitsCount(mode: Mode.Mode, version: number) {
 }
 
 function getTotalBitsFromDataArray(
-	segments: Array<DataAbstractClass>,
+	segments: Array<InputTypeClass>,
 	version: number
 ) {
 	let totalBits = 0;
@@ -49,8 +62,8 @@ function getTotalBitsFromDataArray(
 }
 
 function getBestVersionForMixedData(
-	segments: Array<DataAbstractClass>,
-	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits
+	segments: Array<InputTypeClass>,
+	errorCorrectionLevel?: ErrorCorrectionLevelBits
 ) {
 	for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
 		const length = getTotalBitsFromDataArray(segments, currentVersion);
@@ -82,7 +95,7 @@ export function isValid(version?: number) {
 
 export function getCapacity(
 	version: number,
-	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits,
+	errorCorrectionLevel?: ErrorCorrectionLevelBits,
 	mode?: Mode.Mode
 ): number {
 	if (!isValid(version)) {
@@ -127,8 +140,8 @@ export function getCapacity(
  * @returns
  */
 export function getBestVersionForData(
-	data: DataAbstractClass | Array<DataAbstractClass>,
-	errorCorrectionLevel?: ECLevel.ErrorCorrectionLevelBits
+	data: InputTypeClass | Array<InputTypeClass>,
+	errorCorrectionLevel?: ErrorCorrectionLevelBits
 ): number | undefined {
 	let seg;
 	const ecl = ECLevel.from(errorCorrectionLevel, ECLevel.M);

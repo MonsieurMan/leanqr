@@ -2,7 +2,7 @@ export class BitBuffer {
 	public buffer: number[] = [];
 	private length: number = 0;
 
-	get(index: number) {
+	get(index: number): boolean {
 		const bufIndex = Math.floor(index / 8);
 		return ((this.buffer[bufIndex] >>> (7 - (index % 8))) & 1) === 1;
 	}
