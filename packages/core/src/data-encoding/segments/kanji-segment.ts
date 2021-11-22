@@ -1,21 +1,24 @@
-import * as Mode from './mode.js';
-import * as Utils from '../encoder/utils.js';
-import { BitBuffer } from '../data/bit-buffer.js';
-import { InputTypeClass } from './input-type.js';
+import * as Mode from '../mode.js';
+import * as Utils from '../../encoder/utils.js';
+import { BitBuffer } from '../../data/bit-buffer.js';
+import { SegmentAbstract } from '../segment.js';
 
 // TODO: Should move from core.
-export class KanjiData extends InputTypeClass {
+export class KanjiSegment extends SegmentAbstract {
 	public mode: Mode.Mode = Mode.KANJI;
 
 	constructor(data: string) {
 		super(data);
 	}
+
 	getLength() {
 		return this.data.length;
 	}
+
 	getBitsLength() {
-		return KanjiData.getBitsLength(this.data.length);
+		return KanjiSegment.getBitsLength(this.data.length);
 	}
+
 	write(bitBuffer: BitBuffer) {
 		let i;
 		// In the Shift JIS system, Kanji characters are represented by a two byte combination.
@@ -56,4 +59,4 @@ export class KanjiData extends InputTypeClass {
 		return length * 13;
 	}
 }
-export default KanjiData;
+export default KanjiSegment;

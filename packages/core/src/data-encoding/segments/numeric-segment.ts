@@ -1,8 +1,8 @@
-import * as Mode from './mode.js';
-import { BitBuffer } from '../data/bit-buffer.js';
-import { InputTypeClass } from './input-type.js';
+import * as Mode from '../mode.js';
+import { BitBuffer } from '../../data/bit-buffer.js';
+import { SegmentAbstract } from '../segment.js';
 
-export class NumericData extends InputTypeClass {
+export class NumericSegment extends SegmentAbstract {
 	public mode = Mode.NUMERIC;
 
 	constructor(data: number | string) {
@@ -14,7 +14,7 @@ export class NumericData extends InputTypeClass {
 	}
 	
 	getBitsLength() {
-		return NumericData.getBitsLength(this.data.length);
+		return NumericSegment.getBitsLength(this.data.length);
 	}
 
 	write(bitBuffer: BitBuffer) {
@@ -40,4 +40,4 @@ export class NumericData extends InputTypeClass {
 		return 10 * Math.floor(length / 3) + (length % 3 ? (length % 3) * 3 + 1 : 0);
 	}
 }
-export default NumericData;
+export default NumericSegment;

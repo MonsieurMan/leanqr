@@ -19,6 +19,7 @@ export class BitBuffer {
 
 	putBit(bit: boolean): void {
 		const bufIndex = Math.floor(this.length / 8);
+		
 		if (this.buffer.length <= bufIndex) {
 			this.buffer.push(0);
 		}

@@ -4,7 +4,7 @@ import * as Utils from '../encoder/utils.js';
 import * as Version from '../encoder/version.js';
 import * as ECLevel from './error-correction-level.js';
 import * as ECCode from './error-correction-code.js';
-import * as Mode from '../mode/mode.js';
+import * as Mode from '../data-encoding/mode.js';
 
 const test = tap.test;
 

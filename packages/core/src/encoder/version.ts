@@ -13,68 +13,10 @@
 import * as Utils from './utils.js';
 import * as ECCode from '../error-correction/error-correction-code.js';
 import * as ECLevel from '../error-correction/error-correction-level.js';
-import * as Mode from '../mode/mode.js';
-import { InputTypeClass } from '../mode/input-type';
-import { ErrorCorrectionLevelBits } from '../models/index.js';
+import * as Mode from '../data-encoding/mode.js';
+import { SegmentAbstract } from '../data-encoding/segment.js';
+import { ErrorCorrectionLevelBits } from "../error-correction/error-correction-level";
 
-// Generator polynomial used to encode version information
-const G18 =
-	(1 << 12) |
-	(1 << 11) |
-	(1 << 10) |
-	(1 << 9) |
-	(1 << 8) |
-	(1 << 5) |
-	(1 << 2) |
-	(1 << 0);
-
-const G18_BCH = Utils.getBCHDigit(G18);
-
-function getBestVersionForDataLength(
-	mode: Mode.Mode,
-	length: number,
-	errorCorrectionLevel?: ErrorCorrectionLevelBits
-) {
-	for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
-		if (length <= getCapacity(currentVersion, errorCorrectionLevel, mode)) {
-			return currentVersion;
-		}
-	}
-
-	return undefined;
-}
-
-function getReservedBitsCount(mode: Mode.Mode, version: number) {
-	// Character count indicator + mode indicator bits
-	return Mode.getCharCountIndicator(mode, version) + 4;
-}
-
-function getTotalBitsFromDataArray(
-	segments: Array<InputTypeClass>,
-	version: number
-) {
-	let totalBits = 0;
-	segments.forEach(function (data) {
-		const reservedBits = getReservedBitsCount(data.mode, version);
-		totalBits += reservedBits + data.getBitsLength();
-	});
-	return totalBits;
-}
-
-function getBestVersionForMixedData(
-	segments: Array<InputTypeClass>,
-	errorCorrectionLevel?: ErrorCorrectionLevelBits
-) {
-	for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
-		const length = getTotalBitsFromDataArray(segments, currentVersion);
-
-		if (length <= getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)) {
-			return currentVersion;
-		}
-	}
-
-	return undefined;
-}
 
 export function from(value: unknown, defaultValue: number = 1): number {
 	let testValue: number;
@@ -133,6 +75,7 @@ export function getCapacity(
 			return Math.floor(usableBits / 8);
 	}
 }
+
 /**
  *
  * @param {Uint8Array} data
@@ -140,7 +83,7 @@ export function getCapacity(
  * @returns
  */
 export function getBestVersionForData(
-	data: InputTypeClass | Array<InputTypeClass>,
+	data: SegmentAbstract | Array<SegmentAbstract>,
 	errorCorrectionLevel?: ErrorCorrectionLevelBits
 ): number | undefined {
 	let seg;
@@ -170,4 +113,63 @@ export function getEncodedBits(version: number): number {
 		d ^= G18 << (Utils.getBCHDigit(d) - G18_BCH);
 	}
 	return (version << 12) | d;
+}
+
+// Generator polynomial used to encode version information
+const G18 =
+	(1 << 12) |
+	(1 << 11) |
+	(1 << 10) |
+	(1 << 9) |
+	(1 << 8) |
+	(1 << 5) |
+	(1 << 2) |
+	(1 << 0);
+
+const G18_BCH = Utils.getBCHDigit(G18);
+
+function getBestVersionForDataLength(
+	mode: Mode.Mode,
+	length: number,
+	errorCorrectionLevel?: ErrorCorrectionLevelBits
+) {
+	for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
+		if (length <= getCapacity(currentVersion, errorCorrectionLevel, mode)) {
+			return currentVersion;
+		}
+	}
+
+	return undefined;
+}
+
+function getReservedBitsCount(mode: Mode.Mode, version: number) {
+	// Character count indicator + mode indicator bits
+	return Mode.getCharCountIndicator(mode, version) + 4;
+}
+
+function getTotalBitsFromDataArray(
+	segments: Array<SegmentAbstract>,
+	version: number
+) {
+	let totalBits = 0;
+	segments.forEach(function (data) {
+		const reservedBits = getReservedBitsCount(data.mode, version);
+		totalBits += reservedBits + data.getBitsLength();
+	});
+	return totalBits;
+}
+
+function getBestVersionForMixedData(
+	segments: Array<SegmentAbstract>,
+	errorCorrectionLevel?: ErrorCorrectionLevelBits
+) {
+	for (let currentVersion = 1; currentVersion <= 40; currentVersion++) {
+		const length = getTotalBitsFromDataArray(segments, currentVersion);
+
+		if (length <= getCapacity(currentVersion, errorCorrectionLevel, Mode.MIXED)) {
+			return currentVersion;
+		}
+	}
+
+	return undefined;
 }

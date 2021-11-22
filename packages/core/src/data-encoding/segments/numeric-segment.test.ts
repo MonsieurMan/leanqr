@@ -1,8 +1,8 @@
 import tap from 'tap';
 
-import { BitBuffer } from '../data/bit-buffer.js';
-import { NumericData } from './numeric-data.js';
-import * as Mode from './mode.js';
+import { BitBuffer } from '../../data/bit-buffer.js';
+import { NumericSegment } from './numeric-segment.js';
+import * as Mode from '../mode.js';
 
 const test = tap.test;
 
@@ -38,9 +38,9 @@ const testData = [
 		dataBit: [30, 214, 128],
 	},
 ];
-test('Numeric Data', function (t) {
+test('Numeric Segment', function (t) {
 	testData.forEach(function (data) {
-		const numericData = new NumericData(data.data);
+		const numericData = new NumericSegment(data.data);
 		t.equal(numericData.mode, Mode.NUMERIC, 'Mode should be NUMERIC');
 		t.equal(numericData.getLength(), data.length, 'Should return correct length');
 		t.equal(

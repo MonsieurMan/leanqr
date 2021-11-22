@@ -3,19 +3,53 @@
  * of one ECI or encodation mode.
  */
 
-import * as Mode from '../mode/mode.js';
-import { NumericData } from '../mode/numeric-data.js';
-import { AlphanumericData } from '../mode/alphanumeric-data.js';
-import { ByteData } from '../mode/byte-data.js';
-import { KanjiData } from '../mode/kanji-data.js';
-import * as Regex from '../mode/regex.js';
+import * as Mode from './mode.js';
+
+import { NumericSegment } from './segments/numeric-segment.js';
+import { AlphanumericSegment } from './segments/alphanumeric-segment.js';
+import { ByteSegment } from './segments/byte-segment.js';
+import { KanjiSegment } from './segments/kanji-segment.js';
+import { Segment, SegmentAbstract } from './segment.js';
+
+import * as Regex from './regex.js';
 import * as Utils from '../encoder/utils.js';
 
 import { findPath } from './dijkstra.js';
-import { InputType, InputTypeClass } from '../mode/input-type.js';
+
+export function fromArray(array: Array<Partial<Segment> | string>) {
+	return array.reduce(function (acc, seg) {
+		if (typeof seg === 'string') {
+			acc.push(buildSingleSegment(seg, 'fuck this codebase'));
+		} else if (seg.data) {
+			acc.push(buildSingleSegment(seg.data, seg.mode));
+		}
+		return acc;
+	}, [] as SegmentAbstract[]);
+}
+
+export function fromString(
+	data: string,
+	version: number
+): Array<SegmentAbstract> {
+	const segs = getSegmentsFromString(data);
+	const nodes = buildNodes(segs);
+	const graph = buildGraph(nodes, version);
+	const path = findPath(graph.map, 'start', 'end');
+	const optimizedSegs = [];
+
+	for (let i = 1; i < path.length - 1; i++) {
+		optimizedSegs.push(graph.table[path[i]].node);
+	}
+
+	return fromArray(mergeSegments(optimizedSegs));
+}
+
+export function rawSplit(data: string): Array<SegmentAbstract> {
+	return fromArray(getSegmentsFromString(data));
+}
 
 /**
- * Returns UTF8 byte length
+ * Returns UTF8 byte length.
  *
  * @param  {String} str Input string
  * @return {Number}     Number of byte
@@ -27,7 +61,7 @@ function getStringByteLength(str: string): number {
 
 /**
  * Get a list of segments of the specified mode
- * from a string
+ * from a string.
  *
  * @param  {Mode}   mode Segment mode
  * @param  {String} str  String to process
@@ -37,9 +71,10 @@ function getSegments(
 	regex: RegExp,
 	mode: Mode.Mode,
 	str: string
-): Array<InputType> {
+): Array<Segment> {
 	const segments = [];
 	let result;
+
 	while ((result = regex.exec(str)) !== null) {
 		segments.push({
 			data: result[0],
@@ -48,6 +83,7 @@ function getSegments(
 			length: result[0].length,
 		});
 	}
+
 	return segments;
 }
 
@@ -58,15 +94,15 @@ function getSegments(
  * @param  {String} dataStr Input string
  * @return {Array}          Array of object with segments data
  */
-function getSegmentsFromString(dataStr: string): Array<InputType> {
+function getSegmentsFromString(dataStr: string): Array<Segment> {
 	const numSegs = getSegments(Regex.NUMERIC, Mode.NUMERIC, dataStr);
 	const alphaNumSegs = getSegments(
 		Regex.ALPHANUMERIC,
 		Mode.ALPHANUMERIC,
 		dataStr
 	);
-	let byteSegs: InputType[];
-	let kanjiSegs: InputType[];
+	let byteSegs: Segment[];
+	let kanjiSegs: Segment[];
 
 	if (Utils.isKanjiModeEnabled()) {
 		byteSegs = getSegments(Regex.BYTE, Mode.BYTE, dataStr);
@@ -102,13 +138,13 @@ function getSegmentsFromString(dataStr: string): Array<InputType> {
 function getSegmentBitsLength(length: number, mode: Mode.Mode): number {
 	switch (mode) {
 		case Mode.NUMERIC:
-			return NumericData.getBitsLength(length);
+			return NumericSegment.getBitsLength(length);
 		case Mode.ALPHANUMERIC:
-			return AlphanumericData.getBitsLength(length);
+			return AlphanumericSegment.getBitsLength(length);
 		case Mode.KANJI:
-			return KanjiData.getBitsLength(length);
+			return KanjiSegment.getBitsLength(length);
 		case Mode.BYTE:
-			return ByteData.getBitsLength(length);
+			return ByteSegment.getBitsLength(length);
 		default:
 			throw new Error('Unknown mode ' + mode);
 	}
@@ -120,16 +156,23 @@ function getSegmentBitsLength(length: number, mode: Mode.Mode): number {
  * @param  {Array} segs Array of object with segments data
  * @return {Array}      Array of object with segments data
  */
-function mergeSegments(segs: Array<InputType>): Array<InputType> {
-	return segs.reduce((acc, curr) => {
-		const prevSeg = acc.length - 1 >= 0 ? acc[acc.length - 1] : null;
-		if (prevSeg && prevSeg.mode === curr.mode) {
-			acc[acc.length - 1].data += curr.data;
-			return acc;
+function mergeSegments(segs: Array<Segment>): Array<Segment> {
+	const mergeSegment = (acc: Segment[], currentSegment: Segment): Segment[] => {
+		const previousSegment = acc.length - 1 >= 0 ? acc[acc.length - 1] : null;
+
+		if (currentSegment.mode === previousSegment?.mode) {
+			// Previous and current segment have the same mode,
+			// therefore we can merge them as one segment.
+			acc[acc.length - 1].data += currentSegment.data;
+		} else {
+			// Else we do no merge
+			acc.push(currentSegment);
 		}
-		acc.push(curr);
+
 		return acc;
-	}, [] as Array<InputType>);
+	};
+
+	return segs.reduce(mergeSegment, [] as Array<Segment>);
 }
 
 /**
@@ -146,10 +189,10 @@ function mergeSegments(segs: Array<InputType>): Array<InputType> {
  * Each node represents a possible segment.
  *
  * @param  {Array} segs Array of object with segments data
- * @return {Array}      Array of object with segments data
+ * @return {Array}      Array of array with segments data
  */
-function buildNodes(segs: Array<InputType>): Array<Array<InputType>> {
-	const nodes = [];
+function buildNodes(segs: Array<Segment>): Array<Array<Segment>> {
+	const nodes: Array<Array<Segment>> = [];
 
 	for (let i = 0; i < segs.length; i++) {
 		const seg = segs[i];
@@ -210,7 +253,10 @@ export interface Graph {
 }
 
 interface Table {
-	[key: string]: { node: InputType; lastCount: number };
+	[key: string]: {
+		node: Segment;
+		lastCount: number;
+	};
 }
 
 /**
@@ -225,7 +271,7 @@ interface Table {
  * @param  {Number} version QR Code version
  * @return {Object}         Graph of all possible segments
  */
-function buildGraph(nodes: Array<Array<InputType>>, version: number): Graph {
+function buildGraph(nodes: Array<Array<Segment>>, version: number): Graph {
 	const table: Table = {};
 	const graph: GraphInt = { start: {} };
 	let prevNodeIds = ['start'];
@@ -233,6 +279,7 @@ function buildGraph(nodes: Array<Array<InputType>>, version: number): Graph {
 	for (let i = 0; i < nodes.length; i++) {
 		const nodeGroup = nodes[i];
 		const currentNodeIds = [];
+
 		for (let j = 0; j < nodeGroup.length; j++) {
 			const node = nodeGroup[j];
 			const key = '' + i + j;
@@ -275,6 +322,7 @@ function buildGraph(nodes: Array<Array<InputType>>, version: number): Graph {
  * Builds a segment from a specified data and mode.
  * If a mode is not specified, the more suitable will be used.
  *
+ * TODO: get rid of the Mode|String
  * @param  {String} data             Input data
  * @param  {Mode | String} modesHint Data mode
  * @return {Segment}                 Segment
@@ -282,7 +330,7 @@ function buildGraph(nodes: Array<Array<InputType>>, version: number): Graph {
 function buildSingleSegment(
 	data: string,
 	modesHint?: string | Mode.Mode
-): InputTypeClass {
+): SegmentAbstract {
 	let mode;
 	const bestMode = Mode.getBestModeForData(data);
 	mode = Mode.from(modesHint, bestMode);
@@ -300,6 +348,7 @@ function buildSingleSegment(
 		);
 	}
 
+	// FIXME: Global is kanjiModeEnabled state.
 	// Use Mode.BYTE if Kanji support is disabled
 	if (mode === Mode.KANJI && !Utils.isKanjiModeEnabled()) {
 		mode = Mode.BYTE;
@@ -307,43 +356,16 @@ function buildSingleSegment(
 
 	switch (mode) {
 		case Mode.NUMERIC:
-			return new NumericData(data);
+			return new NumericSegment(data);
 		case Mode.ALPHANUMERIC:
-			return new AlphanumericData(data);
+			return new AlphanumericSegment(data);
 		case Mode.KANJI:
-			return new KanjiData(data);
+			return new KanjiSegment(data);
 		case Mode.BYTE:
-			return new ByteData(data);
+			return new ByteSegment(data);
 		default:
 			throw new Error('Unknown mode ' + mode);
 	}
 }
 
-export function fromArray(array: Array<Partial<InputType> | string>) {
-	return array.reduce(function (acc, seg) {
-		if (typeof seg === 'string') {
-			acc.push(buildSingleSegment(seg, 'fuck this codebase'));
-		} else if (seg.data) {
-			acc.push(buildSingleSegment(seg.data, seg.mode));
-		}
-		return acc;
-	}, [] as InputTypeClass[]);
-}
 
-export function fromString(data: string, version: number): Array<InputTypeClass> {
-	const segs = getSegmentsFromString(data);
-	const nodes = buildNodes(segs);
-	const graph = buildGraph(nodes, version);
-	const path = findPath(graph.map, 'start', 'end');
-	const optimizedSegs = [];
-
-	for (let i = 1; i < path.length - 1; i++) {
-		optimizedSegs.push(graph.table[path[i]].node);
-	}
-
-	return fromArray(mergeSegments(optimizedSegs));
-}
-
-export function rawSplit(data: string): Array<InputTypeClass> {
-	return fromArray(getSegmentsFromString(data));
-}

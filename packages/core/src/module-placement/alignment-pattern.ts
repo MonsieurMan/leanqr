@@ -1,5 +1,3 @@
-import { getSymbolSize } from '../encoder/utils.js';
-
 /**
  * Alignment pattern are fixed reference pattern in defined positions
  * in a matrix symbology, which enables the decode software to re-synchronise
@@ -9,6 +7,9 @@ import { getSymbolSize } from '../encoder/utils.js';
  * Alignment patterns are present only in QR Code symbols of version 2 or larger
  * and their number depends on the symbol version.
  */
+
+import { getSymbolSize } from '../encoder/utils.js';
+
 export function getRowColCoords(version: number): number[] {
 	if (version === 1) return [];
 	const posCount = Math.floor(version / 7) + 2;

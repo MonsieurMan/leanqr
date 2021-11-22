@@ -1,4 +1,4 @@
-import { ErrorCorrectionLevelBits } from '../models/index.js';
+import { ErrorCorrectionLevelBits } from "./error-correction-level";
 import * as ECLevel from './error-correction-level.js';
 
 const EC_BLOCKS_TABLE = [

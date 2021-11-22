@@ -8,7 +8,7 @@
  *  allowing to encode the input data.
  * 
  * 2. Data encoding
- *  - Encode the binary string according to the selected Mode.
+ *  - Encode the binary string as data Segments according to the selected Mode.
  *  - Add ModeIndicator bit sequence, the data, a Terminator bit sequence.
  *  - The bit stream is then split in 8bit codewords.
  *  - Add PaddingCharacters to fill the required number of codewords.

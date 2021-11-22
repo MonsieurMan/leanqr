@@ -1,4 +1,4 @@
-import * as Regex from '../mode/regex.js';
+import * as Regex from './regex.js';
 import { isValid as isValidVersion } from '../encoder/version.js';
 
 /**

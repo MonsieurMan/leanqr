@@ -1,6 +1,6 @@
-import * as Mode from './mode.js';
-import { BitBuffer } from '../data/bit-buffer.js';
-import { InputType, InputTypeClass } from './input-type.js';
+import * as Mode from '../mode.js';
+import { BitBuffer } from '../../data/bit-buffer.js';
+import { SegmentAbstract } from '../segment.js';
 
 /**
  * Array of characters available in alphanumeric mode
@@ -11,7 +11,7 @@ import { InputType, InputTypeClass } from './input-type.js';
  *
  * @type {Array}
  */
-const ALPHA_NUM_CHARS = [
+const ALPHA_NUM_CHARS: string[] = [
 	'0',
 	'1',
 	'2',
@@ -59,7 +59,7 @@ const ALPHA_NUM_CHARS = [
 	':',
 ];
 
-export class AlphanumericData extends InputTypeClass {
+export class AlphanumericSegment extends SegmentAbstract {
 	public mode: Mode.Mode = Mode.ALPHANUMERIC;
 	constructor(data: string) {
 		super(data);
@@ -71,11 +71,12 @@ export class AlphanumericData extends InputTypeClass {
 	}
 
 	getBitsLength() {
-		return AlphanumericData.getBitsLength(this.data.length);
+		return AlphanumericSegment.getBitsLength(this.data.length);
 	}
 
 	write(bitBuffer: BitBuffer) {
 		let i;
+
 		// Input data characters are divided into groups of two characters
 		// and encoded as 11-bit binary codes.
 		for (i = 0; i + 2 <= this.data.length; i += 2) {
@@ -86,6 +87,7 @@ export class AlphanumericData extends InputTypeClass {
 			// The sum is then stored as 11-bit binary number
 			bitBuffer.put(value, 11);
 		}
+
 		// If the number of input data characters is not a multiple of two,
 		// the character value of the final character is encoded as a 6-bit binary number.
 		if (this.data.length % 2) {
@@ -98,4 +100,4 @@ export class AlphanumericData extends InputTypeClass {
 	}
 }
 
-export default AlphanumericData;
+export default AlphanumericSegment;

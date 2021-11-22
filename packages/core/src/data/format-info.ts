@@ -1,4 +1,4 @@
-import { ErrorCorrectionLevelBits } from '../models/index.js';
+import { ErrorCorrectionLevelBits } from "../error-correction/error-correction-level.js";
 import * as Utils from '../encoder/utils.js';
 
 const G15 =

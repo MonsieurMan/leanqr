@@ -1,7 +1,7 @@
-import {
-	ErrorCorrectionLevel,
-	ErrorCorrectionLevelBits,
-} from '../models/index.js';
+export type ErrorCorrectionLevel = 'low' | 'medium' | 'high' | 'quartile';
+export interface ErrorCorrectionLevelBits {
+	bit: number;
+}
 
 function fromString(string: string): ErrorCorrectionLevelBits {
 	if (typeof string !== 'string') {

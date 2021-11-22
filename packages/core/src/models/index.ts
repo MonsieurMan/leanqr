@@ -1,11 +1,13 @@
-export interface Module {
+import { ErrorCorrectionLevel, ErrorCorrectionLevelBits } from "../error-correction/error-correction-level";
+
+export interface Modules {
 	size: number;
 	data: Uint8Array;
 	reservedBit: Uint8Array;
 }
 
 export interface EncodedQRCode {
-	modules: Module;
+	modules: Modules;
 	version: number;
 	errorCorrectionLevel: ErrorCorrectionLevelBits;
 	maskPattern: number | undefined;
@@ -29,8 +31,3 @@ interface EncodingOptionInternal {
 }
 
 export type EncodingOption = Partial<EncodingOptionInternal>;
-
-export type ErrorCorrectionLevel = 'low' | 'medium' | 'high' | 'quartile';
-export interface ErrorCorrectionLevelBits {
-	bit: number;
-}

@@ -1,9 +1,9 @@
 import tap from 'tap';
-import * as Mode from '../mode/mode.js';
-import * as Segments from './segments.js';
-import { NumericData } from '../mode/numeric-data.js';
-import { AlphanumericData } from '../mode/alphanumeric-data.js';
-import { ByteData } from '../mode/byte-data.js';
+import * as Mode from './mode.js';
+import * as Segments from './segment-builder.js';
+import { NumericSegment } from './segments/numeric-segment.js';
+import { AlphanumericSegment } from './segments/alphanumeric-segment.js';
+import { ByteSegment } from './segments/byte-segment.js';
 // import toSJIS from "../../../dist/esm/helper/to-sjis.js";
 // import * as Utils from "../../encoder/utils.js";
 
@@ -160,7 +160,7 @@ const test = tap.test;
 test('Segments from array', function (t) {
 	t.same(
 		Segments.fromArray(['abcdef', '12345']),
-		[new ByteData('abcdef'), new NumericData('12345')],
+		[new ByteSegment('abcdef'), new NumericSegment('12345')],
 		'Should return correct segment from array of string'
 	);
 	t.same(
@@ -168,13 +168,13 @@ test('Segments from array', function (t) {
 			{ data: 'abcdef', mode: Mode.BYTE, index: 0, length: 0 },
 			{ data: '12345', mode: Mode.NUMERIC, index: 0, length: 0 },
 		]),
-		[new ByteData('abcdef'), new NumericData('12345')],
+		[new ByteSegment('abcdef'), new NumericSegment('12345')],
 		'Should return correct segment from array of objects'
 	);
 
 	t.same(
 		Segments.fromArray([{ data: 'abcdef' }, { data: '12345' }]),
-		[new ByteData('abcdef'), new NumericData('12345')],
+		[new ByteSegment('abcdef'), new NumericSegment('12345')],
 		'Should return correct segment from array of objects if mode is not specified'
 	);
 	t.same(Segments.fromArray([{}]), [], 'Should return an empty array');
@@ -183,7 +183,7 @@ test('Segments from array', function (t) {
 	}, 'Should throw if segment cannot be encoded with specified mode');
 	t.same(
 		Segments.fromArray([{ data: '０１２３', mode: Mode.KANJI }]),
-		[new ByteData('０１２３')],
+		[new ByteSegment('０１２３')],
 		'Should use Byte mode if kanji support is disabled'
 	);
 	t.end();
@@ -207,9 +207,9 @@ test('Segments from array', function (t) {
 
 test('Segments raw split', function (t) {
 	const splitted = [
-		new ByteData('abc'),
-		new AlphanumericData('DEF'),
-		new NumericData('123'),
+		new ByteSegment('abc'),
+		new AlphanumericSegment('DEF'),
+		new NumericSegment('123'),
 	];
 	t.same(Segments.rawSplit('abcDEF123'), splitted);
 	t.end();

@@ -1,7 +1,7 @@
 import tap from 'tap';
-import { BitBuffer } from '../data/bit-buffer.js';
-import { AlphanumericData } from './alphanumeric-data.js';
-import * as Mode from './mode.js';
+import { BitBuffer } from '../../data/bit-buffer.js';
+import { AlphanumericSegment } from './alphanumeric-segment.js';
+import * as Mode from '../mode.js';
 const test = tap.test;
 const testData = [
 	{
@@ -23,9 +23,9 @@ const testData = [
 		dataBit: [57, 168, 116, 32],
 	},
 ];
-test('Alphanumeric Data', function (t) {
+test('Alphanumeric Segment', function (t) {
 	testData.forEach(function (data) {
-		const alphanumericData = new AlphanumericData(data.data);
+		const alphanumericData = new AlphanumericSegment(data.data);
 		t.equal(
 			alphanumericData.mode,
 			Mode.ALPHANUMERIC,

@@ -1,5 +1,5 @@
 /**
- * Helper class to handle QR Code symbol modules
+ * Helper class to handle QR Code symbol modules.
  *
  * @param {Number} size Symbol size
  */
