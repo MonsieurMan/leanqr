@@ -1,7 +1,7 @@
 import tap from 'tap';
 
 import * as FormatInfo from './format-info.js';
-import * as ECLevel from '../error-correction/error-correction-level.js';
+import * as ECLevel from './error-correction/error-correction-level.js';
 import * as MaskPattern from './mask-pattern.js';
 
 const test = tap.test;

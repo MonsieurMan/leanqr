@@ -1,11 +1,11 @@
 /**
- * QRCode version ranges from 1 to 40, translated directly to 
- * the counts of modules used. 
+ * QRCode version ranges from 1 to 40, translated directly to
+ * the counts of modules used.
  * Each version increases module count by 4.
- * 
+ *
  * It directly impacts the encoding capacity, the higher the version
  * the more data you can encode as a QRCode.
- * 
+ *
  * Version 1 -> 21x21 modules
  * Version 40 -> 177x177 modules
  */
@@ -15,8 +15,7 @@ import * as ECCode from '../error-correction/error-correction-code.js';
 import * as ECLevel from '../error-correction/error-correction-level.js';
 import * as Mode from '../data-encoding/mode.js';
 import { SegmentAbstract } from '../data-encoding/segment.js';
-import { ErrorCorrectionLevelBits } from "../error-correction/error-correction-level";
-
+import { ErrorCorrectionLevelBits } from '../error-correction/error-correction-level';
 
 export function from(value: unknown, defaultValue: number = 1): number {
 	let testValue: number;

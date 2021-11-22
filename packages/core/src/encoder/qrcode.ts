@@ -1,17 +1,17 @@
 import * as Utils from './utils.js';
 import * as ECLevel from '../error-correction/error-correction-level.js';
-import { BitMatrix } from '../data/bit-matrix.js';
+import { BitMatrix } from '../data-structure/bit-matrix.js';
 import * as AlignmentPattern from '../module-placement/alignment-pattern.js';
 import * as FinderPattern from '../module-placement/finder-pattern.js';
-import * as MaskPattern from '../data/mask-pattern.js';
+import * as MaskPattern from '../mask-pattern.js';
 import * as ECCode from '../error-correction/error-correction-code.js';
 import { ReedSolomonEncoder } from '../error-correction/reed-solomon-encoder.js';
 import * as Version from './version.js';
-import * as FormatInfo from '../data/format-info.js';
+import * as FormatInfo from '../format-info.js';
 import * as Mode from '../data-encoding/mode.js';
 import * as Segments from '../data-encoding/segment-builder.js';
-import { BitBuffer } from '../data/bit-buffer.js';
-import { EncodedQRCode, EncodingOption } from '../models/index.js';
+import { BitBuffer } from '../data-structure/bit-buffer.js';
+
 import { ErrorCorrectionLevelBits } from '../error-correction/error-correction-level';
 import { SegmentAbstract } from '../data-encoding/segment.js';
 
@@ -41,6 +41,39 @@ import { SegmentAbstract } from '../data-encoding/segment.js';
 //---------------------------------------------------------------------
 */
 
+export interface Modules {
+	size: number;
+	data: Uint8Array;
+	reservedBit: Uint8Array;
+}
+
+export interface EncodedQRCode {
+	modules: Modules;
+	version: number;
+	errorCorrectionLevel: ErrorCorrectionLevelBits;
+	maskPattern: number | undefined;
+	segments: any[]; // ByteData
+}
+
+interface EncodingOptionInternal {
+	version: number;
+	maskPattern: number;
+	margin: number;
+	scale: number;
+	width: number;
+	type: string;
+	color: {
+		light?: string;
+		dark?: string;
+	};
+	rendererOpts: any;
+	toSJISFunc: () => any;
+	errorCorrectionLevel: ECLevel.ErrorCorrectionLevel;
+}
+
+export type EncodingOption = Partial<EncodingOptionInternal>;
+
+
 export function encode(data: string, options: EncodingOption): EncodedQRCode {
 	if (typeof data === 'undefined' || data === '') {
 		throw new Error('No input text');
@@ -55,6 +88,7 @@ export function encode(data: string, options: EncodingOption): EncodedQRCode {
 		errorCorrectionLevel = ECLevel.from(options.errorCorrectionLevel, ECLevel.M);
 		version = Version.from(options.version);
 		mask = MaskPattern.from(options.maskPattern);
+		
 		if (options.toSJISFunc) {
 			Utils.setToSJISFunction(options.toSJISFunc);
 		}

@@ -1,5 +1,5 @@
-import { ErrorCorrectionLevelBits } from "../error-correction/error-correction-level.js";
-import * as Utils from '../encoder/utils.js';
+import { ErrorCorrectionLevelBits } from "./error-correction/error-correction-level.js";
+import * as Utils from './encoder/utils.js';
 
 const G15 =
 	(1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);

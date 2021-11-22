@@ -1,6 +1,6 @@
 import * as Mode from '../mode.js';
 import * as Utils from '../../encoder/utils.js';
-import { BitBuffer } from '../../data/bit-buffer.js';
+import { BitBuffer } from '../../data-structure/bit-buffer.js';
 import { SegmentAbstract } from '../segment.js';
 
 // TODO: Should move from core.

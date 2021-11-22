@@ -1,5 +1,5 @@
 import tap from 'tap';
-import { BitMatrix } from './bit-matrix.js';
+import { BitMatrix } from './data-structure/bit-matrix.js';
 import * as MaskPattern from './mask-pattern.js';
 
 const test = tap.test;

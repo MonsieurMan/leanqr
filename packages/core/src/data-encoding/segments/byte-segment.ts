@@ -1,5 +1,5 @@
 import * as Mode from '../mode.js';
-import { BitBuffer } from '../../data/bit-buffer.js';
+import { BitBuffer } from '../../data-structure/bit-buffer.js';
 import { SegmentAbstract } from '../segment.js';
 
 export class ByteSegment extends SegmentAbstract {

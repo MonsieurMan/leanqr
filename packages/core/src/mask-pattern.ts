@@ -1,18 +1,18 @@
 /**
- * Masking is process of XORing the bit pattern in the encoding region 
- * with a mask pattern to provide a symbol with more evenly balanced 
- * numbers of dark and light modules and reduced occurrence of patterns 
+ * Masking is process of XORing the bit pattern in the encoding region
+ * with a mask pattern to provide a symbol with more evenly balanced
+ * numbers of dark and light modules and reduced occurrence of patterns
  * which would interfere with fast processing of the image.
- * 
- * This enables the ratio of dark to light modules in the symbol 
- * to be approximated to 1:1 whilst minimizing the occurrence of 
+ *
+ * This enables the ratio of dark to light modules in the symbol
+ * to be approximated to 1:1 whilst minimizing the occurrence of
  * arrangements of adjoining modules, therefore allowing for easier
  * decoding.
- * 
+ *
  * TLDR; it re-arranges modules in a predictable manner so the decoder
  * has a easier job reading the final QRCode.
  */
-import { BitMatrix } from '../data/bit-matrix';
+import { BitMatrix } from './data-structure/bit-matrix';
 
 /**
  * Weighted penalty scores for the undesirable features.
@@ -88,12 +88,16 @@ export function getPenaltyN1(data: BitMatrix) {
 	for (let row = 0; row < size; row++) {
 		sameCountCol = sameCountRow = 0;
 		lastCol = lastRow = null;
+
 		for (let col = 0; col < size; col++) {
 			let module = data.get(row, col);
+
 			if (module === lastCol) {
 				sameCountCol++;
 			} else {
-				if (sameCountCol >= 5) points += PenaltyScores.N1 + (sameCountCol - 5);
+				if (sameCountCol >= 5) {
+					points += PenaltyScores.N1 + (sameCountCol - 5);
+				}
 				lastCol = module;
 				sameCountCol = 1;
 			}
@@ -101,13 +105,19 @@ export function getPenaltyN1(data: BitMatrix) {
 			if (module === lastRow) {
 				sameCountRow++;
 			} else {
-				if (sameCountRow >= 5) points += PenaltyScores.N1 + (sameCountRow - 5);
+				if (sameCountRow >= 5) {
+					points += PenaltyScores.N1 + (sameCountRow - 5);
+				}
 				lastRow = module;
 				sameCountRow = 1;
 			}
 		}
-		if (sameCountCol >= 5) points += PenaltyScores.N1 + (sameCountCol - 5);
-		if (sameCountRow >= 5) points += PenaltyScores.N1 + (sameCountRow - 5);
+		if (sameCountCol >= 5) {
+			points += PenaltyScores.N1 + (sameCountCol - 5);
+		}
+		if (sameCountRow >= 5) {
+			points += PenaltyScores.N1 + (sameCountRow - 5);
+		}
 	}
 	return points;
 }

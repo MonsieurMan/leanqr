@@ -1,6 +1,6 @@
 import tap from 'tap';
 
-import { BitBuffer } from '../../data/bit-buffer.js';
+import { BitBuffer } from '../../data-structure/bit-buffer.js';
 import { NumericSegment } from './numeric-segment.js';
 import * as Mode from '../mode.js';
 

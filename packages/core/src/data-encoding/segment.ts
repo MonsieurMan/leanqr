@@ -1,5 +1,5 @@
 import { Mode } from './mode.js';
-import { BitBuffer } from '../data/bit-buffer';
+import { BitBuffer } from '../data-structure/bit-buffer';
 
 // TODO: Get rid of this interface
 export interface Segment {
