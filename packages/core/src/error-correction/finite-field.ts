@@ -1,5 +1,5 @@
 /**
- * Galois
+ *
  * https://en.wikipedia.org/wiki/Finite_field
  */
 
@@ -18,6 +18,7 @@ const LOG_TABLE = new Uint8Array(256);
 			x ^= 0x11d;
 		}
 	}
+
 	// Optimization: double the size of the anti-log table so that we don't need to mod 255 to
 	// stay inside the bounds (because we will mainly use this table for the multiplication of
 	// two GF numbers, no more).
@@ -37,7 +38,9 @@ export function exp(n: number): number {
 }
 
 export function mul(x: number, y: number): number {
-	if (x === 0 || y === 0) return 0;
+	if (x === 0 || y === 0) {
+		return 0;
+	}
 	// should be EXP_TABLE[(LOG_TABLE[x] + LOG_TABLE[y]) % 255] if EXP_TABLE wasn't oversized
 	// @see {@link initTables}
 	return EXP_TABLE[LOG_TABLE[x] + LOG_TABLE[y]];

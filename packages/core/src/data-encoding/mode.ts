@@ -1,5 +1,8 @@
 import * as Regex from './regex.js';
 import { isValid as isValidVersion } from '../encoder/version.js';
+/**
+ * TODO: Add mode doc
+ */
 
 /**
  * Get mode object from its name
@@ -28,7 +31,6 @@ function fromString(string: string): Mode {
 	}
 }
 
-// TODO: Change Mode to InputType
 export const NUMERIC: Mode = {
 	id: 'Numeric',
 	bit: 1 << 0,

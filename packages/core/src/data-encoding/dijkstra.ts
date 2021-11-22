@@ -20,6 +20,8 @@
  * THE SOFTWARE.
  *****************************************************************************/
 
+export type Key = number | string;
+
 export interface Graph {
 	[key: string]: {
 		[key: string]: number;
@@ -28,26 +30,26 @@ export interface Graph {
 
 export function singleSourceShortestPaths(
 	graph: Graph,
-	s: string | number,
-	d?: string | number
+	startNodeKey: Key,
+	endNodeKey?: Key
 ) {
 	// Predecessor map for each node that has been encountered.
 	// node ID => predecessor node ID
-	let predecessors: { [key: string | number]: number | string } = {};
+	let predecessors: { [key: Key]: Key } = {};
 
 	// Costs of shortest paths from s to all nodes encountered.
 	// node ID => cost
 	let costs: {
-		[key: number | string]: number;
+		[key: Key]: number;
 	} = {};
-	costs[s] = 0;
+	costs[startNodeKey] = 0;
 
 	// Costs of shortest paths from s to all nodes encountered; differs from
 	// `costs` in that it provides easy access to the node that currently has
 	// the known shortest path from s.
 	// XXX: Do we actually need both `costs` and `open`?
 	let open = new PriorityQueue();
-	open.push(s, 0);
+	open.push(startNodeKey, 0);
 
 	let closest,
 		u,
@@ -97,20 +99,26 @@ export function singleSourceShortestPaths(
 		}
 	}
 
-	if (typeof d !== 'undefined' && typeof costs[d] === 'undefined') {
-		let msg = ['Could not find a path from ', s, ' to ', d, '.'].join('');
-		throw new Error(msg);
+	if (
+		typeof endNodeKey !== 'undefined' &&
+		typeof costs[endNodeKey] === 'undefined'
+	) {
+		throw new Error(
+			`Could not find a path from ${startNodeKey} to ${endNodeKey}.`
+		);
 	}
 
 	return predecessors;
 }
 
 export function extractShortestPathFromPredecessorList(
-	predecessors: { [key: number | string]: number | string },
-	d?: number | string
-) {
+	predecessors: {
+		[key: Key]: Key;
+	},
+	endNodeKey?: Key
+): Key[] {
 	let nodes = [];
-	let u = d;
+	let u = endNodeKey;
 	// let predecessor;
 	while (u) {
 		nodes.push(u);
@@ -121,9 +129,13 @@ export function extractShortestPathFromPredecessorList(
 	return nodes;
 }
 
-export function findPath(graph: Graph, s: string, d?: string) {
-	let predecessors = singleSourceShortestPaths(graph, s, d);
-	return extractShortestPathFromPredecessorList(predecessors, d);
+export function findPath(
+	graph: Graph,
+	startNodeKey: string,
+	endNodeKey?: string
+): Key[] {
+	let predecessors = singleSourceShortestPaths(graph, startNodeKey, endNodeKey);
+	return extractShortestPathFromPredecessorList(predecessors, endNodeKey);
 }
 
 interface Item {
@@ -148,7 +160,7 @@ class PriorityQueue {
 	 * Add a new item to the queue and ensure the highest priority element
 	 * is at the front of the queue.
 	 */
-	push(value: number | string, cost: number) {
+	push(value: Key, cost: number) {
 		let item = { value: value, cost: cost };
 		this.queue.push(item);
 		this.queue.sort(this.sorter);

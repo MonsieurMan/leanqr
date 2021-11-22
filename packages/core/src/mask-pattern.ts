@@ -1,5 +1,5 @@
 /**
- * Masking is process of XORing the bit pattern in the encoding region
+ * Masking is the process of XORing the bit pattern in the encoding region
  * with a mask pattern to provide a symbol with more evenly balanced
  * numbers of dark and light modules and reduced occurrence of patterns
  * which would interfere with fast processing of the image.
@@ -101,7 +101,9 @@ export function getPenaltyN1(data: BitMatrix) {
 				lastCol = module;
 				sameCountCol = 1;
 			}
+
 			module = data.get(col, row);
+
 			if (module === lastRow) {
 				sameCountRow++;
 			} else {
@@ -119,6 +121,7 @@ export function getPenaltyN1(data: BitMatrix) {
 			points += PenaltyScores.N1 + (sameCountRow - 5);
 		}
 	}
+
 	return points;
 }
 
@@ -133,7 +136,10 @@ export function getPenaltyN2(data: BitMatrix) {
 				data.get(row, col + 1) +
 				data.get(row + 1, col) +
 				data.get(row + 1, col + 1);
-			if (last === 4 || last === 0) points++;
+
+			if (last === 4 || last === 0) {
+				points++;
+			}
 		}
 	}
 
@@ -150,9 +156,14 @@ export function getPenaltyN3(data: BitMatrix) {
 		bitsCol = bitsRow = 0;
 		for (let col = 0; col < size; col++) {
 			bitsCol = ((bitsCol << 1) & 0x7ff) | data.get(row, col);
-			if (col >= 10 && (bitsCol === 0x5d0 || bitsCol === 0x05d)) points++;
+
+			if (col >= 10 && (bitsCol === 0x5d0 || bitsCol === 0x05d)) {
+				points++;
+			}
 			bitsRow = ((bitsRow << 1) & 0x7ff) | data.get(col, row);
-			if (col >= 10 && (bitsRow === 0x5d0 || bitsRow === 0x05d)) points++;
+			if (col >= 10 && (bitsRow === 0x5d0 || bitsRow === 0x05d)) {
+				points++;
+			}
 		}
 	}
 
@@ -168,6 +179,7 @@ export function getPenaltyN4(data: BitMatrix) {
 	}
 
 	const k = Math.abs(Math.ceil((darkCount * 100) / modulesCount / 5) - 10);
+
 	return k * PenaltyScores.N4;
 }
 
@@ -187,10 +199,11 @@ export function applyMask(pattern: number, data: BitMatrix) {
 export function getBestMask(
 	data: BitMatrix,
 	setupFormatFunc: (maskPattern: number) => void
-) {
+): number {
 	const numPatterns = Object.keys(Patterns).length;
 	let bestPattern = 0;
 	let lowerPenalty = Infinity;
+
 	for (let p = 0; p < numPatterns; p++) {
 		setupFormatFunc(p);
 		applyMask(p, data);
@@ -202,10 +215,12 @@ export function getBestMask(
 			getPenaltyN4(data);
 		// Undo previously applied mask
 		applyMask(p, data);
+
 		if (penalty < lowerPenalty) {
 			lowerPenalty = penalty;
 			bestPattern = p;
 		}
 	}
+
 	return bestPattern;
 }
